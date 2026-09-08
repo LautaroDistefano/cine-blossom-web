@@ -9,4 +9,6 @@ import { Movie } from '../../../core/models/movie.interface';
 })
 export class MovieCard {
   pelicula = input.required<Movie>();
+
+  variant = input<'default' | 'top'>('default');
 }

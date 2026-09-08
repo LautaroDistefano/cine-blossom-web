@@ -3,9 +3,11 @@ import { Router } from '@angular/router';
 import { MovieService } from '../../core/services/movie.service';
 import { MovieCard } from '../../shared/components/movie-card/movie-card';
 import { SearchBar } from '../../shared/components/search-bar/search-bar';
+import { MovieFilterGenre } from '../../shared/components/movie-filter-genre/movie-filter-genre';
+import { TopMovies } from '../top-movies/top-movies';
 
 @Component({
-  imports: [MovieCard, SearchBar],
+  imports: [MovieCard, SearchBar, MovieFilterGenre, TopMovies],
   selector: 'app-home',
   styleUrl: './home.css',
   templateUrl: './home.html',

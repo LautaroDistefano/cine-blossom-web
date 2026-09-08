@@ -1,0 +1,11 @@
+<div class="contenedor-peliculas">
+
+    @for(pelicula of peliculasMayorRating(); track pelicula.id){
+        <div class="book-wrapper">
+            <app-movie-card [pelicula]="pelicula" variant="top"/>
+            <!-- <button class="btn-detalle" (click)="verDetalles(pelicula.id)">
+                Ver detalles
+            </button> -->
+        </div>
+    }
+</div>

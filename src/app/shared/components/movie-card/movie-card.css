@@ -27,7 +27,6 @@ body {
     display: block;
 }
 
-
 .card-content {
     display: flex;
     flex-direction: column;
@@ -68,4 +67,10 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
+}
+
+.card--top {
+    transform: scale(1.1);
+    margin: 20px;
+    box-shadow: 0 4px 12px rgb(196, 190, 170);
 }
