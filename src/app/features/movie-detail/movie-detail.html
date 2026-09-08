@@ -1,0 +1,25 @@
+<section class="contenedor-pelicula">
+    @if (pelicula(); as peliculaActual) {
+        <div class="imagen-pelicula">
+            <img [src]="peliculaActual.imagen" [alt]="peliculaActual.nombre">
+        </div>
+
+        <div class="contenido-pelicula">
+            <h2>{{ peliculaActual.nombre }}</h2>
+
+            <h3> {{ peliculaActual.sinopsis }} </h3>
+
+            <div class="datos-pelicula">
+                <p>{{ peliculaActual.duracion }} min.</p>
+
+                @for (genero of peliculaActual.generos; track genero) {
+                    <span class="genre-tag">{{ genero }}</span>
+                }
+            </div>
+
+            <button (click)="volverHome()"> Home </button>
+        </div>
+    } @else {
+        <h1>No hay peli</h1>
+    }
+</section>

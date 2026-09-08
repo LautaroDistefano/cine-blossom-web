@@ -1,0 +1,15 @@
+<div class="home-contenedor">
+    <h1>Catálogo de peliculas</h1>
+    <app-search-bar [(valor)]="filtroBarraBusqueda"/>
+
+    <div class="book-contenedor">
+        @for (pelicula of peliculasFiltradas(); track pelicula.id) {
+            <div class="book-wrapper">
+                <app-movie-card [pelicula]="pelicula" />
+                <button class="btn-detalle" (click)="verDetalles(pelicula.id)">
+                    Ver detalles
+                </button>
+            </div>
+        }
+    </div>
+</div>

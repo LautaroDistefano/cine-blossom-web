@@ -1,0 +1,14 @@
+<div class="search-container">
+<!-- Two-way binding con model(): el valor se sincroniza con el padre -->
+<!-- Event Binding (input): actualizamos el model cuando el usuario escribe -->
+<input 
+    type="text" 
+    [value]="valor()" 
+    (input)="valor.set($any($event.target).value)"
+    placeholder="🔍 Buscar por título o autor..."
+    class="search-input"
+>
+@if (valor()) {
+    <button (click)="vaciarBarra()" class="clear-btn">✕</button>
+}
+</div>

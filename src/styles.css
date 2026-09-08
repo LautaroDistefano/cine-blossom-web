@@ -1,1 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
+*{
+    margin: 0;
+}
+
+
+:root {
+    --color-bg: #10192a;
+    --color-header: #5c1f2a;
+    --color-footer: #5c1f2a;
+    --color-accent: #c9a227;
+    --color-surface: #1a2332;
+    --color-text: #f2e9d8;
+    --color-text-muted: #8a94a3;
+}
+
+body {
+    position: relative;
+    background-color: var(--color-bg);
+    min-height: 100vh;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.12;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+

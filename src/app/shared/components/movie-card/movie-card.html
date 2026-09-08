@@ -1,0 +1,25 @@
+<article class="card">
+    <img [src]="this.pelicula().imagen">
+
+    <div class="card-content">
+        <h1>{{this.pelicula().nombre}}</h1>
+    
+    <!-- Si Movie tiene restriccion de edad: La mostramos, sino: Mostramos un mensaje -->
+    @if(this.pelicula().restriccionEdad === null){
+        <p>ATP</p>
+    }@else{
+        <p> {{this.pelicula().restriccionEdad}} años</p>
+    }
+
+    <div class="genres">
+        @for(genero of this.pelicula().generos; track pelicula().generos){
+            <span class="genre-tag"> {{genero}} </span>
+        }
+    </div>
+
+    <div class="footer">
+        <span>{{this.pelicula().duracion}} min.</span>
+        <span>{{this.pelicula().ratingPromedio}}⭐</span>
+    </div>
+    </div>
+</article>
