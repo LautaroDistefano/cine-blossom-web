@@ -72,6 +72,12 @@ export class MovieService {
         return computed(() => this.peliculasSignal().find(p => p.id === id));
     }
 
+    // --- Cargamos los generos unicos ---
+    generosDisponibles = computed(() => {
+        const generosPelicula = this.peliculasSignal().flatMap(p => p.generos);
+        return [... new Set(generosPelicula)].sort();
+    })
+
     // --- Operaciones de escritura (para el admin, RF06) ---
 
     async agregarPelicula(pelicula: Omit<Movie, 'id'>): Promise<boolean> {

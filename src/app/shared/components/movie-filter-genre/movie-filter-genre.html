@@ -1,1 +1,7 @@
-<button> Filtrar </button>
+<!-- movie-filter-genre.html -->
+<select [value]="valor()" (change)="valor.set($any($event.target).value)">
+  <option value="" class="selector">Todos los géneros</option>
+  @for (genero of generos(); track genero) {
+    <option [value]="genero" class="opcion">{{ genero }}</option>
+  }
+</select>

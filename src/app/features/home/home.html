@@ -9,7 +9,10 @@
     <h2>Catálogo de películas</h2>
 
     <div class="buscadores">
-      <app-movie-filter-genre></app-movie-filter-genre>
+    <app-movie-filter-genre 
+      [(valor)]="generoSeleccionado" 
+      [generos]="generosDisponibles()" 
+    />
       <app-search-bar [(valor)]="filtroBarraBusqueda" />
     </div>
 

@@ -1,5 +1,21 @@
-button{
-    background-color: var(--color-background);
+option{
+    background-color: var(--color-surface);
     font-size: 1rem;
     color: var(--color-text);
 }
+select{
+    background-color: var(--color-surface);
+    font-size: 1rem;
+    color: var(--color-text);
+}
+
+/* .selector{
+    background-color: var(--color-surface);
+    font-size: 1rem;
+    color: var(--color-text);
+}
+.opcion{
+    background-color: var(--color-surface);
+    font-size: 1rem;
+    color: var(--color-text);
+} */

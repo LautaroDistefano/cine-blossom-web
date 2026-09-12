@@ -11,19 +11,23 @@ import { RouterLink } from '@angular/router';
   styleUrl: './register.css',
 })
 export class Register {
+  // Injectamos los servicios que vamos a utilizar
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
 
+  // Creamos un formulario con el metodo group de FormBuilder
   registerForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
+
 
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
 
   async onSubmit() {
+    // Segunda capa de seguridad
     if (this.registerForm.invalid) return;
 
     this.isLoading.set(true);

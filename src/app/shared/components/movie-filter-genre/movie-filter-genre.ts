@@ -1,4 +1,5 @@
-import { Component, model } from '@angular/core';
+// movie-filter-genre.ts
+import { Component, input, model } from '@angular/core';
 
 @Component({
   imports: [],
@@ -8,4 +9,5 @@ import { Component, model } from '@angular/core';
 })
 export class MovieFilterGenre {
   valor = model<string>('');
+  generos = input.required<string[]>();
 }

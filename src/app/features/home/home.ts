@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MovieService } from '../../core/services/movie.service';
 import { MovieCard } from '../../shared/components/movie-card/movie-card';
@@ -13,23 +13,28 @@ import { TopMovies } from '../top-movies/top-movies';
   templateUrl: './home.html',
 })
 export class Home {
-  constructor(private router:Router, private movieService:MovieService){}
+  private router = inject(Router);
+  private movieService = inject(MovieService);
 
-  filtroBarraBusqueda = signal('')
+  filtroBarraBusqueda = signal('');
+  generoSeleccionado = signal('');
+
+  // El select de géneros disponibles lo arma MovieFilterGenre,
+  // pero la lista de opciones sale de acá (ya la tenés en MovieService)
+  generosDisponibles = this.movieService.generosDisponibles;
 
   peliculasFiltradas = computed(() => {
     const palabra = this.filtroBarraBusqueda().toLowerCase();
-    if(!palabra){
-      return this.movieService.peliculas();
-    }
-    return this.movieService.peliculas().filter(libro => 
-      libro.nombre.toLowerCase().includes(palabra) || 
-      libro.nombre.toLowerCase().includes(palabra)
-    )
-  })
+    const genero = this.generoSeleccionado();
 
-  verDetalles(libroId:string){
-    this.router.navigate(["pelicula", libroId])
+    return this.movieService.peliculas().filter(pelicula => {
+      const matchTexto = !palabra || pelicula.nombre.toLowerCase().includes(palabra);
+      const matchGenero = !genero || pelicula.generos.includes(genero);
+      return matchTexto && matchGenero;
+    });
+  });
+
+  verDetalles(peliculaId: string) {
+    this.router.navigate(['pelicula', peliculaId]);
   }
-
 }
