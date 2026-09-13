@@ -32,8 +32,15 @@ export class AuthService {
     }
 
     // Registrar un nuevo usuario (retorna una promesa con la respuesta de Supabase)
-    async signUp(email: string, password: string) {
-        return this.supabase.auth.signUp({ email, password });
+    // auth.service.ts
+    async signUp(email: string, password: string, nombre: string, apellido: string) {
+        return this.supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: { nombre, apellido }
+            }
+        });
     }
 
     // Iniciar sesión

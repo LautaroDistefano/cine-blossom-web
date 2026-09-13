@@ -18,9 +18,10 @@ export class Register {
   // Creamos un formulario con el metodo group de FormBuilder
   registerForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    nombre: ['', Validators.required],
+    apellido: ['', Validators.required]
   });
-
 
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
@@ -34,10 +35,10 @@ export class Register {
     this.errorMessage.set(null);
     this.successMessage.set(null);
 
-    const { email, password } = this.registerForm.value;
+    const { email, password, nombre, apellido} = this.registerForm.value;
 
     try {
-      const { data, error } = await this.authService.signUp(email!, password!);
+      const { data, error } = await this.authService.signUp(email!, password!, nombre!, apellido!);
       if (error) throw error;
       
       // Si la confirmación de email está activa en Supabase, avisamos
