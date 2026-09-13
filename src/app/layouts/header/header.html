@@ -11,6 +11,15 @@
                 <li>
                     <a routerLink="/catalogo" routerLinkActive="activo">Proximamente</a>
                 </li>
+                @if (authService.rolActual() === 'admin') {
+                    <li>
+                        <a routerLink="/admin">Sos: <strong>ADMIN!</strong></a>
+                    </li>
+                }@else{
+                    <li>
+                        <a routerLink="/admin">Sos: <strong>USUARIO</strong></a>
+                    </li>
+                }
             </ul>
         </div>
     </div>

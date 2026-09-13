@@ -97,7 +97,7 @@ export class MovieService {
             return false;
         }
 
-        await this.cargarPeliculas(); // refrescamos el signal local
+        await this.cargarPeliculas(); // "refrescamos" el signal local
         return true;
     }
 

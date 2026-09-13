@@ -11,6 +11,7 @@ export class AuthService {
     // Signals para manejar el estado de autenticación
     currentUser = signal<User | null>(null);
     currentSession = signal<Session | null>(null);
+    rolActual = signal<'cliente' | 'admin' | null>(null);
 
     constructor() {
         this.initAuthSession();
@@ -20,15 +21,32 @@ export class AuthService {
     private initAuthSession() {
         // Obtener sesión inicial
         this.supabase.auth.getSession().then(({ data: { session } }) => {
-        this.currentSession.set(session);
-        this.currentUser.set(session?.user ?? null);
+            this.currentSession.set(session);
+            this.currentUser.set(session?.user ?? null);
+            if (session?.user) this.cargarPerfil(session.user.id);
         });
 
-        // Escuchar cambios de estado en la autenticación
         this.supabase.auth.onAuthStateChange((_event, session) => {
-        this.currentSession.set(session);
-        this.currentUser.set(session?.user ?? null);
+            this.currentSession.set(session);
+            this.currentUser.set(session?.user ?? null);
+            if (session?.user) {
+                this.cargarPerfil(session.user.id);
+            } else {
+                this.rolActual.set(null);
+            }
         });
+    }
+
+    private async cargarPerfil(userId: string) {
+        const { data, error } = await this.supabase
+            .from('perfiles')
+            .select('rol')
+            .eq('id', userId)
+            .single();
+
+        if (!error && data) {
+            this.rolActual.set(data.rol as 'cliente' | 'admin');
+        }
     }
 
     // Registrar un nuevo usuario (retorna una promesa con la respuesta de Supabase)
