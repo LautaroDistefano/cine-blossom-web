@@ -43,5 +43,13 @@
     }
     </div>
 
+    <div class="resumen-reserva">
+        <p>Butacas seleccionadas: {{ butacasSeleccionadas().join(', ') || 'ninguna' }}</p>
+        <button 
+            [disabled]="butacasSeleccionadas().length === 0 || reservando()" 
+            (click)="confirmarReserva()">
+            {{ reservando() ? 'Reservando...' : 'Confirmar reserva' }}
+        </button>
+    </div>
     <button (click)="volverHome()" class="boton-cancelar"> Cancelar </button>
 </section>
