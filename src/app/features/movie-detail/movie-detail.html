@@ -16,9 +16,22 @@
                     <span class="genre-tag">{{ genero }}</span>
                 }
             </div>
-
+                        
             <div class="contenedor-compra">
-                <button class="boton-compra">Reservar</button>
+                <button class="boton-ver-funciones" (click)="toggleFunciones()">
+                    {{ mostrarFunciones() ? 'Ocultar funciones' : 'Ver funciones' }}
+                </button>
+
+                @if (mostrarFunciones()) {
+                    <div class="lista-funciones">
+                        @for (funcion of funcionesPelicula(); track funcion.id) {
+                            <div class="funcion-card">
+                                <p>{{ funcion.horario }} — {{ funcion.formato }} — {{ funcion.idioma }}</p>
+                                <button (click)="irAReservar(funcion.id)">Reservar</button>
+                            </div>
+                        }
+                    </div>
+                }
             </div>
 
             <button (click)="volverHome()"> Home </button>
