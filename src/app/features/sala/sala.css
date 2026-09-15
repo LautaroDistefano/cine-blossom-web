@@ -1,0 +1,317 @@
+section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sala-contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    gap: 6px;
+    overflow-x: auto;
+}
+
+/* Pantalla del cine, como referencia visual arriba de todo */
+.pantalla {
+    width: 60%;
+    max-width: 500px;
+    height: 8px;
+    background: linear-gradient(to bottom, var(--color-accent), transparent);
+    border-radius: 50%;
+    margin-bottom: 2.5rem;
+    opacity: 0.6;
+}
+
+.contenedor-sala{
+    margin: 2rem;
+}
+
+.fila-sala {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.letra-fila {
+    width: 20px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.bloque-butacas {
+    display: flex;
+    gap: 4px; /* esto es el espacio chico entre butacas del mismo bloque */
+}
+
+.bloques-fila {
+    display: flex;
+    gap: 24px; /* esto es el "pasillo" entre bloques */
+}
+
+.butaca {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border-radius: 4px;
+    border: 1px solid var(--color-text-muted);
+    background-color: transparent;
+    color: var(--color-text-muted);
+    font-size: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.15s ease;
+}
+
+.butaca:hover:not(.ocupada):not(:disabled) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: scale(1.1);
+}
+
+.butaca.seleccionada {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-bg);
+    font-weight: 700;
+}
+
+.butaca.ocupada {
+    background-color: rgba(150, 150, 150, 0.15);
+    border-color: transparent;
+    color: transparent;
+    cursor: not-allowed;
+}
+
+/* Butacas accesibles: filas J y K, un poco más grandes y con borde distinto */
+.categoria-accesible .butaca {
+    border-color: rgba(90, 150, 190, 0.5);
+}
+
+.categoria-accesible .butaca.seleccionada {
+    background-color: #5a96be;
+    border-color: #5a96be;
+}
+
+/* Butacas VIP: filas R, S, T, con acento dorado más marcado */
+.categoria-vip .butaca {
+    border-color: rgba(201, 162, 39, 0.5);
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+}
+
+.categoria-vip .butaca.seleccionada {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 6px rgba(201, 162, 39, 0.5);
+}
+
+/* Referencia / leyenda de colores */
+.leyenda-sala {
+    display: flex;
+    gap: 24px;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.leyenda-muestra {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--color-text-muted);
+}
+
+.leyenda-muestra.normal {
+    border-color: var(--color-text-muted);
+}
+
+.leyenda-muestra.accesible {
+    border-color: #5a96be;
+}
+
+.leyenda-muestra.vip {
+    border-color: var(--color-accent);
+}
+
+.leyenda-muestra.ocupada {
+    background-color: rgba(150, 150, 150, 0.15);
+    border-color: transparent;
+}
+
+.leyenda-muestra.seleccionada {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+/* Pantalla del cine, como referencia visual arriba de todo */
+.pantalla {
+    width: 60%;
+    max-width: 500px;
+    height: 8px;
+    background: linear-gradient(to bottom, var(--color-accent), transparent);
+    border-radius: 50%;
+    margin-bottom: 2.5rem;
+    opacity: 0.6;
+}
+
+.contenedor-sala{
+    margin: 2rem;
+}
+
+.fila-sala {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.letra-fila {
+    width: 20px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.butaca {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border-radius: 4px;
+    border: 1px solid var(--color-text-muted);
+    background-color: transparent;
+    color: var(--color-text-muted);
+    font-size: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.15s ease;
+}
+
+.butaca:hover:not(.ocupada):not(:disabled) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: scale(1.1);
+}
+
+.butaca.seleccionada {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-bg);
+    font-weight: 700;
+}
+
+.butaca.ocupada {
+    background-color: rgba(150, 150, 150, 0.15);
+    border-color: transparent;
+    color: transparent;
+    cursor: not-allowed;
+}
+
+/* Butacas accesibles: filas J y K, un poco más grandes y con borde distinto */
+.categoria-accesible .butaca {
+    border-color: rgba(90, 150, 190, 0.5);
+}
+
+.categoria-accesible .butaca.seleccionada {
+    background-color: #5a96be;
+    border-color: #5a96be;
+}
+
+/* Butacas VIP: filas R, S, T, con acento dorado más marcado */
+.categoria-vip .butaca {
+    border-color: rgba(201, 162, 39, 0.5);
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+}
+
+.categoria-vip .butaca.seleccionada {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 6px rgba(201, 162, 39, 0.5);
+}
+
+/* Referencia / leyenda de colores */
+.leyenda-sala {
+    display: flex;
+    gap: 24px;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.leyenda-muestra {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--color-text-muted);
+}
+
+.leyenda-muestra.normal {
+    border-color: var(--color-text-muted);
+}
+
+.leyenda-muestra.accesible {
+    border-color: #5a96be;
+}
+
+.leyenda-muestra.vip {
+    border-color: var(--color-accent);
+}
+
+.leyenda-muestra.ocupada {
+    background-color: rgba(150, 150, 150, 0.15);
+    border-color: transparent;
+}
+
+.leyenda-muestra.seleccionada {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.boton-cancelar {
+    margin-top: auto;
+    padding: 10px 20px;
+    background-color: transparent;
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.boton-cancelar:hover {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+}

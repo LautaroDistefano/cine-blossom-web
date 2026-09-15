@@ -36,7 +36,7 @@ export class MovieDetail {
     this.router.navigate(['/home']);
   }
 
-  irAReservar(IdPelicula: string){
-    this.router.navigate(['/reservar', IdPelicula]);
+  irAReservar(funcionId: string) {
+    this.router.navigate(['/pelicula', this.id(), 'reservar', funcionId]);
   }
 }

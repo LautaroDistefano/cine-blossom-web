@@ -1,0 +1,47 @@
+<section>
+        <div class="leyenda-sala">
+            <div class="leyenda-item">
+                <span class="leyenda-muestra normal"></span> Normal
+            </div>
+            <div class="leyenda-item">
+                <span class="leyenda-muestra accesible"></span> Accesible
+            </div>
+            <div class="leyenda-item">
+                <span class="leyenda-muestra vip"></span> VIP
+            </div>
+            <div class="leyenda-item">
+                <span class="leyenda-muestra ocupada"></span> Ocupada
+            </div>
+            <div class="leyenda-item">
+                <span class="leyenda-muestra seleccionada"></span> Seleccionada
+            </div>
+        </div>
+        
+        
+    <div class="contenedor-sala">
+        @for (fila of filasConButacas(); track fila.fila) {
+            <div class="fila-sala" [class]="'categoria-' + fila.categoria">
+                <span class="letra-fila">{{ fila.fila }}</span>
+                
+                <div class="bloques-fila">
+                    @for (bloque of fila.bloques; track $index) {
+                        <div class="bloque-butacas">
+                            @for (butaca of bloque; track butaca.codigo) {
+                                <button 
+                                class="butaca"
+                                [class.ocupada]="butaca.ocupada"
+                                [class.seleccionada]="butacasSeleccionadas().includes(butaca.codigo)"
+                                [disabled]="butaca.ocupada"
+                                (click)="toggleButaca(butaca.codigo)">
+                                {{ butaca.codigo }}
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    </div>
+
+    <button (click)="volverHome()" class="boton-cancelar"> Cancelar </button>
+</section>
