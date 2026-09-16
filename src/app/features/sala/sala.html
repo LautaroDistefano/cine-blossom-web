@@ -1,22 +1,22 @@
 <section>
-        <div class="leyenda-sala">
-            <div class="leyenda-item">
-                <span class="leyenda-muestra normal"></span> Normal
-            </div>
-            <div class="leyenda-item">
-                <span class="leyenda-muestra accesible"></span> Accesible
-            </div>
-            <div class="leyenda-item">
-                <span class="leyenda-muestra vip"></span> VIP
-            </div>
-            <div class="leyenda-item">
-                <span class="leyenda-muestra ocupada"></span> Ocupada
-            </div>
-            <div class="leyenda-item">
-                <span class="leyenda-muestra seleccionada"></span> Seleccionada
-            </div>
+    <div class="leyenda-sala">
+        <div class="leyenda-item">
+            <span class="leyenda-muestra normal"></span> Normal
         </div>
-        
+        <div class="leyenda-item">
+            <span class="leyenda-muestra accesible"></span> Accesible
+        </div>
+        <div class="leyenda-item">
+            <span class="leyenda-muestra vip"></span> VIP
+        </div>
+        <div class="leyenda-item">
+            <span class="leyenda-muestra ocupada"></span> Ocupada
+        </div>
+        <div class="leyenda-item">
+            <span class="leyenda-muestra seleccionada"></span> Seleccionada
+        </div>
+    </div>
+    
         
     <div class="contenedor-sala">
         @for (fila of filasConButacas(); track fila.fila) {
@@ -43,8 +43,8 @@
     }
     </div>
 
+    <p class="butacas-seleccionadas">Butacas seleccionadas: {{ butacasSeleccionadas().join(', ') || 'ninguna' }}</p>
     <div class="resumen-reserva">
-        <p>Butacas seleccionadas: {{ butacasSeleccionadas().join(', ') || 'ninguna' }}</p>
         <button 
             [disabled]="butacasSeleccionadas().length === 0 || reservando()" 
             (click)="confirmarReserva()">
