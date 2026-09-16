@@ -10,4 +10,8 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class Header {
   protected authService = inject(AuthService)
+
+  async cerrarSesion(){
+    this.authService.signOut()
+  }
 }

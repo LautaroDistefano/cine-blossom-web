@@ -1,3 +1,4 @@
+<!-- header.html -->
 <header>
     <div class="contenedor-header">
         <div class="encabezado">
@@ -9,15 +10,28 @@
                     <a routerLink="/home" routerLinkActive="activo">Inicio</a>
                 </li>
                 <li>
-                    <a routerLink="/catalogo" routerLinkActive="activo">Proximamente</a>
+                    <a routerLink="/proximamente" routerLinkActive="activo">Próximamente</a>
                 </li>
+
+                <p> {{this.authService.rolActual()}} </p>
+
                 @if (authService.rolActual() === 'admin') {
                     <li>
-                        <a routerLink="/admin">Sos: <strong>ADMIN!</strong></a>
+                        <a routerLink="/admin" routerLinkActive="activo">Panel Admin</a>
                     </li>
-                }@else{
+                }
+
+                @if (authService.currentUser(); as usuario) {
+                    <li class="usuario-info">{{ usuario.email }}</li>
                     <li>
-                        <a routerLink="/admin">Sos: <strong>USUARIO</strong></a>
+                        <button (click)="cerrarSesion()" class="boton-logout">Cerrar sesión</button>
+                    </li>
+                } @else {
+                    <li>
+                        <a routerLink="/login" routerLinkActive="activo">Login</a>
+                    </li>
+                    <li>
+                        <a routerLink="/register" routerLinkActive="activo">Registrarse</a>
                     </li>
                 }
             </ul>
