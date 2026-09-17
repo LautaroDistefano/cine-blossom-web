@@ -9,20 +9,11 @@ import { AdminPeliculas } from './features/admin-peliculas/admin-peliculas';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
-
-    {
-        path: 'home',
-        component: Home,
-        children: [
-            { path: 'pelicula/:id', component: MovieDetail }
-        ]
-    },
-
+    { path: 'home', component: Home },
+    { path: 'pelicula/:id', component: MovieDetail },
     { path: 'pelicula/:id/reservar/:funcionId', component: Sala },
-
     { path: 'login', component: Login },
     { path: 'register', component: Register },
-
     {
         path: 'admin',
         canMatch: [adminGuard],
@@ -31,6 +22,5 @@ export const routes: Routes = [
             { path: 'peliculas', component: AdminPeliculas }
         ]
     },
-
     { path: '**', redirectTo: 'home' }
 ];

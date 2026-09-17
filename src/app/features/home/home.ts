@@ -5,7 +5,6 @@ import { MovieCard } from '../../shared/components/movie-card/movie-card';
 import { SearchBar } from '../../shared/components/search-bar/search-bar';
 import { MovieFilterGenre } from '../../shared/components/movie-filter-genre/movie-filter-genre';
 import { TopMovies } from '../top-movies/top-movies';
-
 @Component({
   imports: [MovieCard, SearchBar, MovieFilterGenre, TopMovies],
   selector: 'app-home',
@@ -35,6 +34,6 @@ export class Home {
   });
 
   verDetalles(peliculaId: string) {
-    this.router.navigate(['pelicula', peliculaId]);
+    this.router.navigate(['/pelicula', peliculaId]);
   }
 }
