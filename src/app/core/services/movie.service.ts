@@ -112,4 +112,27 @@ export class MovieService {
         await this.cargarPeliculas();
         return true;
     }
+
+    // Con Omit creamos un nuevo tipo excluyendo propiedades el tipo existente mediante 'keys' a excluir, en este caso: 'id'
+    // (No queremos que el ID de una pelicula se pueda modificar)
+    async editarPelicula(id: string, cambios: Omit<Movie, 'id'>): Promise<boolean> {
+        const { error } = await this.supabase.from('peliculas').update({
+            nombre: cambios.nombre,
+            sinopsis: cambios.sinopsis,
+            duracion: cambios.duracion,
+            imagen: cambios.imagen,
+            generos: cambios.generos,
+            restriccion_edad: cambios.restriccionEdad,
+            rating_promedio: cambios.ratingPromedio,
+            fecha_estreno: cambios.fechaEstreno
+        }).eq('id', id);
+
+        if (error) {
+            console.error('Error al editar película:', error);
+            return false;
+        }
+
+        await this.cargarPeliculas();
+        return true;
+    }
 }

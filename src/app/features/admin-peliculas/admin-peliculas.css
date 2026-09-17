@@ -1,0 +1,182 @@
+.admin-contenedor {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: var(--color-text);
+}
+
+.admin-contenedor h2 {
+    font-family: var(--font-display, 'Playfair Display', serif);
+    color: var(--color-accent);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* --- Formulario --- */
+
+.form-pelicula {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: var(--color-surface);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    border-radius: 12px;
+    padding: 1.75rem;
+    margin-bottom: 2.5rem;
+}
+
+.form-pelicula h3 {
+    font-family: var(--font-display, 'Playfair Display', serif);
+    color: var(--color-text);
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem;
+}
+
+.form-pelicula input,
+.form-pelicula textarea,
+.form-pelicula select {
+    width: 100%;
+    padding: 10px 4px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid var(--color-text-muted);
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.25s ease;
+}
+
+.form-pelicula textarea {
+    padding-top: 1rem;
+}
+
+.form-pelicula input::placeholder,
+.form-pelicula textarea::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+}
+
+.form-pelicula input:focus,
+.form-pelicula textarea:focus,
+.form-pelicula select:focus {
+    border-bottom: 1px solid var(--color-accent);
+}
+
+.form-pelicula select option {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+.error-msg {
+    color: #e08a8a;
+    background-color: rgba(224, 138, 138, 0.1);
+    border: 1px solid rgba(224, 138, 138, 0.3);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.acciones-form {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.acciones-form button {
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.acciones-form button[type="submit"] {
+    background-color: var(--color-accent);
+    border: none;
+    color: var(--color-bg);
+    font-weight: 600;
+}
+
+.acciones-form button[type="submit"]:hover:not(:disabled) {
+    opacity: 0.85;
+}
+
+.acciones-form button[type="submit"]:disabled {
+    background-color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.acciones-form button[type="button"] {
+    background-color: transparent;
+    border: 1px solid var(--color-text-muted);
+    color: var(--color-text-muted);
+}
+
+.acciones-form button[type="button"]:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+/* --- Tabla --- */
+
+.tabla-peliculas {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--color-surface);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.tabla-peliculas thead {
+    background-color: rgba(201, 162, 39, 0.1);
+}
+
+.tabla-peliculas th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+.tabla-peliculas td {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tabla-peliculas tbody tr:hover {
+    background-color: rgba(201, 162, 39, 0.05);
+}
+
+.tabla-peliculas td:last-child {
+    display: flex;
+    gap: 8px;
+}
+
+.tabla-peliculas button {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border: 1px solid var(--color-text-muted);
+    background-color: transparent;
+    color: var(--color-text-muted);
+    transition: all 0.2s ease;
+}
+
+.tabla-peliculas button:first-child:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+.tabla-peliculas button:last-child:hover {
+    border-color: #e08a8a;
+    color: #e08a8a;
+}
