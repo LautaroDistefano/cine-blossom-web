@@ -1,0 +1,17 @@
+<div class="producto-candybar">
+    <img [src]="producto().imagen" [alt]="producto().nombre">
+    <div class="info-producto">
+        <p class="nombre-producto">{{ producto().nombre }}</p>
+        <p class="precio-producto">${{ producto().precio }}</p>
+    </div>
+
+    <div class="contador-producto">
+        @if (cantidad() > 0) {
+            <button (click)="quitar.emit(producto().id)">−</button>
+            <span>{{ cantidad() }}</span>
+            <button (click)="agregar.emit(producto().id)">+</button>
+        } @else {
+            <button class="boton-agregar" (click)="agregar.emit(producto().id)">Agregar</button>
+        }
+    </div>
+</div>

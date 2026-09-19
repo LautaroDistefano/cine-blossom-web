@@ -7,21 +7,24 @@ export class EntradaService {
     private supabase = inject(SupabaseService).client;
     private authService = inject(AuthService);
 
-    async reservar(funcionId: string, butacas: string[], precioTotal: number): Promise<boolean> {
-        const usuarioId = this.authService.currentUser()?.id ?? null; // null si es anónimo (RF03)
+    async reservar(funcionId: string, butacas: string[], candyBar: any[], precioTotal: number): Promise<{ exito: boolean; codigoQr?: string }> {
+        const usuarioId = this.authService.currentUser()?.id ?? null;
+        const codigoQr = crypto.randomUUID();
 
         const { error } = await this.supabase.from('entradas').insert({
             funcion_id: funcionId,
             usuario_id: usuarioId,
             butacas: butacas,
-            precio_total: precioTotal
+            candy_bar: candyBar,
+            precio_total: precioTotal,
+            codigo_qr: codigoQr
         });
 
         if (error) {
             console.error('Error al reservar:', error);
-            return false;
+            return { exito: false };
         }
 
-        return true;
+        return { exito: true, codigoQr };
     }
 }

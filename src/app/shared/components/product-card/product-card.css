@@ -1,0 +1,132 @@
+.seccion-candybar {
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+}
+
+.boton-toggle-candybar {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: transparent;
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.boton-toggle-candybar:hover {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+}
+
+.lista-candybar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1.25rem;
+}
+
+.producto-candybar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background-color: var(--color-surface);
+    border: 1px solid rgba(201, 162, 39, 0.15);
+    border-radius: 10px;
+    padding: 10px 14px;
+    transition: border-color 0.2s ease;
+}
+
+.producto-candybar:hover {
+    border-color: rgba(201, 162, 39, 0.4);
+}
+
+.producto-candybar img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.info-producto {
+    flex: 1;
+    min-width: 0;
+}
+
+.nombre-producto {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.precio-producto {
+    margin: 2px 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+}
+
+.contador-producto {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.contador-producto .boton-agregar {
+    padding: 8px 18px;
+    background-color: var(--color-accent);
+    border: none;
+    color: var(--color-bg);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.contador-producto .boton-agregar:hover {
+    opacity: 0.85;
+}
+
+.contador-producto button:not(.boton-agregar) {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--color-accent);
+    background-color: transparent;
+    color: var(--color-accent);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.contador-producto button:not(.boton-agregar):hover {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+}
+
+.contador-producto span {
+    min-width: 20px;
+    text-align: center;
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.total-reserva {
+    text-align: center;
+    color: var(--color-accent);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+}

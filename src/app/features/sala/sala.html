@@ -53,3 +53,31 @@
     </div>
     <button (click)="volverHome()" class="boton-cancelar"> Cancelar </button>
 </section>
+
+<hr>
+
+<div class="seccion-candybar">
+    <button class="boton-toggle-candybar" (click)="toggleCandyBar()">
+        {{ mostrarCandyBar() ? 'Ocultar candy bar' : '🍿 Sumar candy bar (opcional)' }}
+    </button>
+
+@if (mostrarCandyBar()) {
+    <p class="total-reserva">Total: ${{ totalReserva() }}</p>
+    <div class="lista-candybar">
+        @for (grupo of candyBarService.productosPorCategoria(); track grupo.categoria) {
+            <div class="grupo-categoria">
+                <h3 class="titulo-categoria">{{ grupo.categoria }}</h3>
+
+                <div class="productos-categoria">
+                    @for (producto of grupo.productos; track producto.id) {
+                        <app-product-card 
+                            [producto]="producto"
+                            [cantidad]="cantidadDe(producto.id)"
+                            (agregar)="agregarAlCarrito($event)"
+                            (quitar)="quitarDelCarrito($event)" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
