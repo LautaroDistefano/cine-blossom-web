@@ -44,6 +44,14 @@
     </div>
 
     <p class="butacas-seleccionadas">Butacas seleccionadas: {{ butacasSeleccionadas().join(', ') || 'ninguna' }}</p>
+
+    @if (!authService.currentUser() && !bannerCerrado()) {
+    <div class="banner-descuento">
+        <p>💰 ¿Sabías que registrándote obtenés <strong>20% OFF</strong> en tu primera compra?</p>
+        <a routerLink="/register" class="boton-registro">Crear cuenta</a>
+    </div>
+    }
+
     <div class="resumen-reserva">
         <button 
             [disabled]="butacasSeleccionadas().length === 0 || reservando()" 

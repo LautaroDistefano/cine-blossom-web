@@ -2,14 +2,16 @@ import { Component, computed, inject, input, signal, OnInit } from '@angular/cor
 import { SalaService } from '../../core/services/sala.service';
 import { FuncionesService } from '../../core/services/funciones.service';
 import { MovieService } from '../../core/services/movie.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { EntradaService } from '../../core/services/entrada.service';
 import { ProductoCandyBarService } from '../../core/services/producto-candybar.service';
 import { ProductCard } from '../../shared/components/product-card/product-card';
 import { TicketService } from '../../core/services/ticket.service';
+import { AuthService } from '../../core/services/auth.service';
+
 
 @Component({
-    imports: [ProductCard],
+    imports: [ProductCard, RouterLink, RouterLinkActive],
     selector: 'app-sala',
     styleUrl: './sala.css',
     templateUrl: './sala.html',
@@ -20,16 +22,19 @@ export class Sala implements OnInit {
     private entradaService = inject(EntradaService);
     private funcionesService = inject(FuncionesService);
     private movieService = inject(MovieService);
+    public authService = inject(AuthService);
     public candyBarService = inject(ProductoCandyBarService);
     private router = inject(Router);
 
     mostrarCandyBar = signal(false);
     reservando = signal(false);
     carritoCandyBar = signal<Map<string, number>>(new Map());
+    bannerCerrado = signal(false);
 
     funcionId = input.required<string>();
 
     filas = this.salaService.generarFilas();
+
 
     filasConButacas = computed(() =>
         this.filas.map(fila => ({
