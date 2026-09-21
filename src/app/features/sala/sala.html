@@ -16,13 +16,13 @@
             <span class="leyenda-muestra seleccionada"></span> Seleccionada
         </div>
     </div>
-    
-        
+
+
     <div class="contenedor-sala">
         @for (fila of filasConButacas(); track fila.fila) {
             <div class="fila-sala" [class]="'categoria-' + fila.categoria">
                 <span class="letra-fila">{{ fila.fila }}</span>
-                
+
                 <div class="bloques-fila">
                     @for (bloque of fila.bloques; track $index) {
                         <div class="bloque-butacas">
@@ -34,23 +34,42 @@
                                 [disabled]="butaca.ocupada"
                                 (click)="toggleButaca(butaca.codigo)">
                                 {{ butaca.codigo }}
-                            </button>
-                        }
-                    </div>
-                }
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
             </div>
-        </div>
-    }
+        }
     </div>
 
     <p class="butacas-seleccionadas">Butacas seleccionadas: {{ butacasSeleccionadas().join(', ') || 'ninguna' }}</p>
 
-    @if (!authService.currentUser() && !bannerCerrado()) {
+    @if (!authService.currentUser()) {
     <div class="banner-descuento">
-        <p>💰 ¿Sabías que registrándote obtenés <strong>20% OFF</strong> en tu primera compra?</p>
+        <p>💰 ¿Sabías que registrándote obtenés <strong>{{ configuracionService.configuracion().descuentoBienvenida }}% OFF</strong> en tu primera compra?</p>
         <a routerLink="/register" class="boton-registro">Crear cuenta</a>
     </div>
     }
+
+    @if (authService.rolActual() === 'admin') {
+    <div class="editor-descuento">
+        <p>Modificar descuento en primera compra:</p>
+        <div class="control-descuento">
+        <button (click)="bajarDescuento()">−</button>
+        <span>{{ configuracionService.configuracion().descuentoBienvenida }}%</span>
+        <button (click)="subirDescuento()">+</button>
+        </div>
+    </div>
+    }
+
+    @if (esPrimeraCompra()) {
+        <p class="descuento-aplicado">
+            ✓ Descuento de bienvenida aplicado ({{ configuracionService.configuracion().descuentoBienvenida }}%)
+        </p>
+    }
+
+    <p class="total-reserva">Total: ${{ totalReserva() }}</p>
 
     <div class="resumen-reserva">
         <button 
@@ -69,23 +88,23 @@
         {{ mostrarCandyBar() ? 'Ocultar candy bar' : '🍿 Sumar candy bar (opcional)' }}
     </button>
 
-@if (mostrarCandyBar()) {
-    <p class="total-reserva">Total: ${{ totalReserva() }}</p>
-    <div class="lista-candybar">
-        @for (grupo of candyBarService.productosPorCategoria(); track grupo.categoria) {
-            <div class="grupo-categoria">
-                <h3 class="titulo-categoria">{{ grupo.categoria }}</h3>
+    @if (mostrarCandyBar()) {
+        <div class="lista-candybar">
+            @for (grupo of candyBarService.productosPorCategoria(); track grupo.categoria) {
+                <div class="grupo-categoria">
+                    <h3 class="titulo-categoria">{{ grupo.categoria }}</h3>
 
-                <div class="productos-categoria">
-                    @for (producto of grupo.productos; track producto.id) {
-                        <app-product-card 
-                            [producto]="producto"
-                            [cantidad]="cantidadDe(producto.id)"
-                            (agregar)="agregarAlCarrito($event)"
-                            (quitar)="quitarDelCarrito($event)" />
-                    }
+                    <div class="productos-categoria">
+                        @for (producto of grupo.productos; track producto.id) {
+                            <app-product-card 
+                                [producto]="producto"
+                                [cantidad]="cantidadDe(producto.id)"
+                                (agregar)="agregarAlCarrito($event)"
+                                (quitar)="quitarDelCarrito($event)" />
+                        }
+                    </div>
                 </div>
-            </div>
-        }
-    </div>
-}
+            }
+        </div>
+    }
+</div>

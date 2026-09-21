@@ -27,4 +27,18 @@ export class EntradaService {
 
         return { exito: true, codigoQr };
     }
+
+    async esPrimeraCompra(usuarioId: string): Promise<boolean> {
+        const { count, error } = await this.supabase
+            .from('entradas')
+            .select('*', { count: 'exact', head: true })
+            .eq('usuario_id', usuarioId);
+
+        if (error) {
+            console.error('Error al verificar compras previas:', error);
+            return false; // ante la duda, no aplicar descuento
+        }
+
+        return count === 0;
+    }
 }

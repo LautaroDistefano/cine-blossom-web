@@ -8,6 +8,7 @@ import { ProductoCandyBarService } from '../../core/services/producto-candybar.s
 import { ProductCard } from '../../shared/components/product-card/product-card';
 import { TicketService } from '../../core/services/ticket.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ConfiguracionService } from '../../core/services/configuracion.service';
 
 
 @Component({
@@ -25,7 +26,9 @@ export class Sala implements OnInit {
     public authService = inject(AuthService);
     public candyBarService = inject(ProductoCandyBarService);
     private router = inject(Router);
+    configuracionService = inject(ConfiguracionService); 
 
+    esPrimeraCompra = signal(false);
     mostrarCandyBar = signal(false);
     reservando = signal(false);
     carritoCandyBar = signal<Map<string, number>>(new Map());
@@ -99,7 +102,14 @@ export class Sala implements OnInit {
 
     totalReserva = computed(() => {
         const precioPorButaca = 3000;
-        return this.butacasSeleccionadas().length * precioPorButaca + this.totalCandyBar();
+        const subtotal = this.butacasSeleccionadas().length * precioPorButaca + this.totalCandyBar();
+
+        if (this.esPrimeraCompra()) {
+            const descuento = this.configuracionService.configuracion().descuentoBienvenida;
+            return subtotal * (1 - descuento / 100);
+        }
+
+        return subtotal;
     });
 
     // --- Confirmar reserva ---
@@ -142,8 +152,24 @@ export class Sala implements OnInit {
         }
     }
 
-    ngOnInit() {
+    async subirDescuento() {
+        const actual = this.configuracionService.configuracion().descuentoBienvenida;
+        await this.configuracionService.actualizarDescuento(Math.min(100, actual + 5));
+    }
+
+    async bajarDescuento() {
+        const actual = this.configuracionService.configuracion().descuentoBienvenida;
+        await this.configuracionService.actualizarDescuento(Math.max(0, actual - 5));
+    }
+
+    async ngOnInit() {
         this.salaService.cargarButacasOcupadas(this.funcionId());
+
+        const usuario = this.authService.currentUser();
+        if (usuario) {
+            const primera = await this.entradaService.esPrimeraCompra(usuario.id);
+            this.esPrimeraCompra.set(primera);
+        }
     }
 
     volverHome() {
