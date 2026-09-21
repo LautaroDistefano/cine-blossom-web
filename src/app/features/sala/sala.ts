@@ -9,6 +9,7 @@ import { ProductCard } from '../../shared/components/product-card/product-card';
 import { TicketService } from '../../core/services/ticket.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ConfiguracionService } from '../../core/services/configuracion.service';
+import { calcularEdad } from '../../utils/fecha.utils';
 
 
 @Component({
@@ -115,8 +116,29 @@ export class Sala implements OnInit {
     // --- Confirmar reserva ---
 
     async confirmarReserva() {
+        // Cargamos las butacas y retornamos en caso de que venga vacia
         const seleccion = this.butacasSeleccionadas();
         if (seleccion.length === 0) return;
+
+        // Buscamos funcion y pelicula antes que todo porque la validacion necesita estos dos datos
+        const funcion = this.funcionesService.funciones().find(f => f.id === this.funcionId())!;
+        const pelicula = this.movieService.peliculas().find(p => p.id === funcion.peliculaId)!;
+
+        // Validacion de edad(RF19) 
+        if (pelicula.restriccionEdad) {
+            const fechaNac = this.authService.fechaNacimiento();
+
+            if (!fechaNac) {
+                alert(`Esta película es +${pelicula.restriccionEdad}. Necesitás estar registrado y con tu fecha de nacimiento cargada para comprar.`);
+                return;
+            }
+
+            const edad = calcularEdad(fechaNac);
+            if (edad < pelicula.restriccionEdad) {
+                alert(`Esta película es +${pelicula.restriccionEdad}. No cumplís la edad mínima para comprar esta entrada.`);
+                return;
+            }
+        }
 
         this.reservando.set(true);
 
@@ -132,9 +154,6 @@ export class Sala implements OnInit {
         this.reservando.set(false);
 
         if (resultado.exito && resultado.codigoQr) {
-            const funcion = this.funcionesService.funciones().find(f => f.id === this.funcionId())!;
-            const pelicula = this.movieService.peliculas().find(p => p.id === funcion.peliculaId)!;
-
             await this.ticketService.generarPdf({
                 peliculaNombre: pelicula.nombre,
                 horario: funcion.horario,

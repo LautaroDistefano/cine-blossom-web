@@ -11,16 +11,15 @@ import { RouterLink } from '@angular/router';
   styleUrl: './register.css',
 })
 export class Register {
-  // Injectamos los servicios que vamos a utilizar
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
 
-  // Creamos un formulario con el metodo group de FormBuilder
   registerForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     nombre: ['', Validators.required],
-    apellido: ['', Validators.required]
+    apellido: ['', Validators.required],
+    fechaNacimiento: ['', Validators.required]
   });
 
   isLoading = signal(false);
@@ -28,20 +27,18 @@ export class Register {
   successMessage = signal<string | null>(null);
 
   async onSubmit() {
-    // Segunda capa de seguridad
     if (this.registerForm.invalid) return;
 
     this.isLoading.set(true);
     this.errorMessage.set(null);
     this.successMessage.set(null);
 
-    const { email, password, nombre, apellido} = this.registerForm.value;
+    const { email, password, nombre, apellido, fechaNacimiento } = this.registerForm.value;
 
     try {
-      const { data, error } = await this.authService.signUp(email!, password!, nombre!, apellido!);
+      const { data, error } = await this.authService.signUp(email!, password!, nombre!, apellido!, fechaNacimiento!);
       if (error) throw error;
-      
-      // Si la confirmación de email está activa en Supabase, avisamos
+
       if (data.user?.identities?.length === 0) {
           this.errorMessage.set('Este email ya está registrado.');
       } else {

@@ -12,6 +12,7 @@ export class AuthService {
     currentUser = signal<User | null>(null);
     currentSession = signal<Session | null>(null);
     rolActual = signal<'cliente' | 'admin' | null>(null);
+    fechaNacimiento = signal<string | null>(null);
 
     constructor() {
         this.initAuthSession();
@@ -33,6 +34,7 @@ export class AuthService {
                 this.cargarPerfil(session.user.id);
             } else {
                 this.rolActual.set(null);
+                this.fechaNacimiento.set(null);
             }
         });
     }
@@ -40,23 +42,24 @@ export class AuthService {
     private async cargarPerfil(userId: string) {
         const { data, error } = await this.supabase
             .from('perfiles')
-            .select('rol')
+            .select('rol, fecha_nacimiento')
             .eq('id', userId)
             .single();
 
         if (!error && data) {
             this.rolActual.set(data.rol as 'cliente' | 'admin');
+            this.fechaNacimiento.set(data.fecha_nacimiento);
         }
     }
 
     // Registrar un nuevo usuario (retorna una promesa con la respuesta de Supabase)
     // auth.service.ts
-    async signUp(email: string, password: string, nombre: string, apellido: string) {
+    async signUp(email: string, password: string, nombre: string, apellido: string, fechaNacimiento: string) {
         return this.supabase.auth.signUp({
             email,
             password,
             options: {
-                data: { nombre, apellido }
+                data: { nombre, apellido, fechaNacimiento }
             }
         });
     }
