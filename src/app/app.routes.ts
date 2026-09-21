@@ -6,10 +6,12 @@ import { Register } from './features/auth/register/register';
 import { Sala } from './features/sala/sala';
 import { adminGuard } from './core/guards/admin-guard';
 import { AdminPeliculas } from './features/admin-peliculas/admin-peliculas';
+import { Proximamente } from './features/proximamente/proximamente';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: 'home', component: Home },
+    { path: 'proximamente', component: Proximamente },
     { path: 'pelicula/:id', component: MovieDetail },
     { path: 'pelicula/:id/reservar/:funcionId', component: Sala },
     { path: 'login', component: Login },

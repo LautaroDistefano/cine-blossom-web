@@ -27,6 +27,16 @@ export class MovieService {
 
     peliculas = computed(() => this.peliculasSignal());
 
+    // Mis peliculas ya estrenadas
+    peliculasEnCartelera = computed(() =>
+        this.peliculasSignal().filter(p => new Date(p.fechaEstreno) <= new Date())
+    );
+
+    peliculasProximamente = computed(() => 
+        this.peliculasSignal().filter(p => new Date(p.fechaEstreno) >= new Date())
+    )
+
+
     constructor() {
         this.cargarPeliculas();
     }

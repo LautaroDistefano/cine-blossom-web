@@ -23,14 +23,14 @@ export class Home {
   generosDisponibles = this.movieService.generosDisponibles;
 
   peliculasFiltradas = computed(() => {
-    const palabra = this.filtroBarraBusqueda().toLowerCase();
-    const genero = this.generoSeleccionado();
+      const palabra = this.filtroBarraBusqueda().toLowerCase();
+      const genero = this.generoSeleccionado();
 
-    return this.movieService.peliculas().filter(pelicula => {
-      const matchTexto = !palabra || pelicula.nombre.toLowerCase().includes(palabra);
-      const matchGenero = !genero || pelicula.generos.includes(genero);
-      return matchTexto && matchGenero;
-    });
+      return this.movieService.peliculasEnCartelera().filter(pelicula => {
+          const matchTexto = !palabra || pelicula.nombre.toLowerCase().includes(palabra);
+          const matchGenero = !genero || pelicula.generos.includes(genero);
+          return matchTexto && matchGenero;
+      });
   });
 
   verDetalles(peliculaId: string) {

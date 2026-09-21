@@ -1,0 +1,19 @@
+<section class="proximamente-contenedor">
+    <h2>Próximamente</h2>
+
+    @if (movieService.peliculasProximamente().length === 0) {
+        <p class="sin-estrenos">No hay estrenos programados por el momento.</p>
+    } @else {
+        <div class="grid-proximamente">
+        @for (pelicula of movieService.peliculasProximamente(); track pelicula.id) {
+            <div class="card-proximamente">
+            <img [src]="pelicula.imagen" [alt]="pelicula.nombre">
+            <div class="info-proximamente">
+                <h3>{{ pelicula.nombre }}</h3>
+                <p class="fecha-estreno">Estreno: {{ pelicula.fechaEstreno | date: 'dd/MM/yyyy' }}</p>
+            </div>
+            </div>
+        }
+        </div>
+    }
+</section>
