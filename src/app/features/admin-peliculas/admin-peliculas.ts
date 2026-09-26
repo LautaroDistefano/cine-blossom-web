@@ -3,7 +3,6 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MovieService } from '../../core/services/movie.service';
 import { Movie } from '../../core/models/movie.interface';
-MovieService
 
 @Component({
   selector: 'app-admin-peliculas',
@@ -16,8 +15,6 @@ export class AdminPeliculas {
   private fb = inject(FormBuilder);
   movieService = inject(MovieService);
 
-  // null = modo "nueva pelicula"
-  // con valor = modo "editando esta pelicula"
   editandoId = signal<string | null>(null);
 
   guardando = signal(false);
@@ -28,9 +25,8 @@ export class AdminPeliculas {
     sinopsis: ['', Validators.required],
     duracion: [0, [Validators.required, Validators.min(1)]],
     imagen: ['', Validators.required],
-    generos: ['', Validators.required], // texto separado por comas, se parsea al guardar
+    generos: ['', Validators.required],
     restriccionEdad: [null as (13 | 18 | null)],
-    ratingPromedio: [0, [Validators.min(0), Validators.max(5)]],
     fechaEstreno: ['', Validators.required],
   });
 
@@ -48,7 +44,6 @@ export class AdminPeliculas {
       imagen: valores.imagen!,
       generos: valores.generos!.split(',').map(g => g.trim()).filter(g => g),
       restriccionEdad: valores.restriccionEdad ?? null,
-      ratingPromedio: Number(valores.ratingPromedio),
       fechaEstreno: valores.fechaEstreno!,
     };
 
@@ -75,14 +70,13 @@ export class AdminPeliculas {
       imagen: pelicula.imagen,
       generos: pelicula.generos.join(', '),
       restriccionEdad: pelicula.restriccionEdad,
-      ratingPromedio: pelicula.ratingPromedio,
       fechaEstreno: pelicula.fechaEstreno,
     });
   }
 
   cancelarEdicion() {
     this.editandoId.set(null);
-    this.peliculaForm.reset({ duracion: 0, ratingPromedio: 0, restriccionEdad: null });
+    this.peliculaForm.reset({ duracion: 0, restriccionEdad: null });
   }
 
   async eliminar(id: string) {

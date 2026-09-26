@@ -1,5 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component, input, inject, computed } from '@angular/core';
 import { Movie } from '../../../core/models/movie.interface';
+import { ReviewService } from '../../../core/services/reviews.service';
 
 @Component({
   imports: [],
@@ -8,7 +9,11 @@ import { Movie } from '../../../core/models/movie.interface';
   templateUrl: './movie-card.html',
 })
 export class MovieCard {
-  pelicula = input.required<Movie>();
+  private reviewService = inject(ReviewService);
 
+  pelicula = input.required<Movie>();
   variant = input<'default' | 'top'>('default');
+
+  cantidadReviews = computed(() => this.reviewService.getReviewsDePelicula(this.pelicula().id)().length);
+  promedio = computed(() => this.reviewService.getPromedioDePelicula(this.pelicula().id)());
 }

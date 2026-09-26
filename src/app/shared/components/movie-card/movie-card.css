@@ -74,3 +74,8 @@ body {
     margin: 20px;
     box-shadow: 0 4px 12px rgb(196, 190, 170);
 }
+
+.sin-calificar {
+    color: var(--color-text-muted);
+    font-style: italic;
+}

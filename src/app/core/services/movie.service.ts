@@ -73,7 +73,6 @@ export class MovieService {
             imagen: row.imagen,
             generos: row.generos,
             restriccionEdad: row.restriccion_edad,
-            ratingPromedio: row.rating_promedio,
             fechaEstreno: row.fecha_estreno
         };
     }
@@ -98,7 +97,6 @@ export class MovieService {
             imagen: pelicula.imagen,
             generos: pelicula.generos,
             restriccion_edad: pelicula.restriccionEdad,
-            rating_promedio: pelicula.ratingPromedio,
             fecha_estreno: pelicula.fechaEstreno
         });
 
@@ -133,7 +131,6 @@ export class MovieService {
             imagen: cambios.imagen,
             generos: cambios.generos,
             restriccion_edad: cambios.restriccionEdad,
-            rating_promedio: cambios.ratingPromedio,
             fecha_estreno: cambios.fechaEstreno
         }).eq('id', id);
 

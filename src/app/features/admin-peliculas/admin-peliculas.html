@@ -10,48 +10,47 @@
         <input formControlName="imagen" placeholder="URL de imagen">
         <input formControlName="generos" placeholder="Géneros (separados por coma)">
         <select formControlName="restriccionEdad">
-        <option [ngValue]="null">Sin restricción</option>
-        <option [ngValue]="13">+13</option>
-        <option [ngValue]="18">+18</option>
+            <option [ngValue]="null">Sin restricción</option>
+            <option [ngValue]="13">+13</option>
+            <option [ngValue]="18">+18</option>
         </select>
-        <input formControlName="ratingPromedio" type="number" step="0.1" placeholder="Rating (0-5)">
         <input formControlName="fechaEstreno" type="date">
 
         @if (error()) {
-        <p class="error-msg">{{ error() }}</p>
+            <p class="error-msg">{{ error() }}</p>
         }
 
         <div class="acciones-form">
-        <button type="submit" [disabled]="peliculaForm.invalid || guardando()">
-            {{ guardando() ? 'Guardando...' : (editandoId() ? 'Guardar cambios' : 'Crear película') }}
-        </button>
-        @if (editandoId()) {
-            <button type="button" (click)="cancelarEdicion()">Cancelar edición</button>
-        }
+            <button type="submit" [disabled]="peliculaForm.invalid || guardando()">
+                {{ guardando() ? 'Guardando...' : (editandoId() ? 'Guardar cambios' : 'Crear película') }}
+            </button>
+            @if (editandoId()) {
+                <button type="button" (click)="cancelarEdicion()">Cancelar edición</button>
+            }
         </div>
     </form>
 
     <table class="tabla-peliculas">
         <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Duración</th>
-            <th>Rating</th>
-            <th>Acciones</th>
-        </tr>
+            <tr>
+                <th>Nombre</th>
+                <th>Duración</th>
+                <th>Rating</th>
+                <th>Acciones</th>
+            </tr>
         </thead>
         <tbody>
-        @for (pelicula of movieService.peliculas(); track pelicula.id) {
-            <tr>
-            <td>{{ pelicula.nombre }}</td>
-            <td>{{ pelicula.duracion }} min</td>
-            <td>{{ pelicula.ratingPromedio }}</td>
-            <td>
-                <button (click)="editar(pelicula)">Editar</button>
-                <button (click)="eliminar(pelicula.id)">Eliminar</button>
-            </td>
-            </tr>
-        }
+            @for (pelicula of movieService.peliculas(); track pelicula.id) {
+                <tr>
+                    <td>{{ pelicula.nombre }}</td>
+                    <td>{{ pelicula.duracion }} min</td>
+                    <td>N/A</td>
+                    <td>
+                        <button (click)="editar(pelicula)">Editar</button>
+                        <button (click)="eliminar(pelicula.id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </section>
