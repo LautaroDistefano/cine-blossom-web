@@ -16,9 +16,8 @@
                 <p> {{this.authService.rolActual()}} </p>
 
                 @if (authService.rolActual() === 'admin') {
-                    <li>
-                        <a routerLink="/admin" routerLinkActive="activo">Panel Admin</a>
-                    </li>
+                    <li><a routerLink="/admin/peliculas" routerLinkActive="activo">Admin Películas</a></li>
+                    <li><a routerLink="/admin/funciones" routerLinkActive="activo">Admin Funciones</a></li>
                 }
 
                 @if (authService.currentUser()) {

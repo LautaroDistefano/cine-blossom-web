@@ -1,0 +1,70 @@
+<section class="admin-contenedor">
+    <h2>Gestión de funciones</h2>
+
+    <form [formGroup]="funcionForm" (ngSubmit)="onSubmit()" class="form-funcion">
+        <h3>{{ editandoId() ? 'Editando función' : 'Nueva función' }}</h3>
+
+        <select formControlName="peliculaId">
+        <option value="" disabled>Elegí una película</option>
+        @for (pelicula of movieService.peliculas(); track pelicula.id) {
+            <option [value]="pelicula.id">{{ pelicula.nombre }}</option>
+        }
+        </select>
+
+        <input formControlName="salaId" type="number" min="1" max="5" placeholder="Sala (1-5)">
+        <input formControlName="horario" type="datetime-local">
+
+        <select formControlName="formato">
+        <option value="2D">2D</option>
+        <option value="3D">3D</option>
+        <option value="4D">4D</option>
+        <option value="5D">5D</option>
+        </select>
+
+        <select formControlName="idioma">
+        <option value="castellano">Castellano</option>
+        <option value="subtitulada">Subtitulada</option>
+        </select>
+
+        @if (error()) {
+        <p class="error-msg">{{ error() }}</p>
+        }
+
+        <div class="acciones-form">
+        <button type="submit" [disabled]="funcionForm.invalid || guardando()">
+            {{ guardando() ? 'Guardando...' : (editandoId() ? 'Guardar cambios' : 'Crear función') }}
+        </button>
+        @if (editandoId()) {
+            <button type="button" (click)="cancelarEdicion()">Cancelar edición</button>
+        }
+        </div>
+    </form>
+
+    <table class="tabla-peliculas">
+        <thead>
+        <tr>
+            <th>Película</th>
+            <th>Sala</th>
+            <th>Horario</th>
+            <th>Formato</th>
+            <th>Idioma</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (funcion of funcionesService.funciones(); track funcion.id) {
+            <tr>
+            <td>{{ nombrePelicula(funcion.peliculaId) }}</td>
+            <td>{{ funcion.salaId }}</td>
+            <td>{{ funcion.horario | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ funcion.formato }}</td>
+            <td>{{ funcion.idioma }}</td>
+            <td>
+                <button (click)="editar(funcion)">Editar</button>
+                <button (click)="eliminar(funcion.id)">Eliminar</button>
+            </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</section>

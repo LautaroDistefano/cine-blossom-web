@@ -9,6 +9,7 @@ import { AdminPeliculas } from './features/admin-peliculas/admin-peliculas';
 import { Proximamente } from './features/proximamente/proximamente';
 import { authGuard } from './core/guards/authGuard';
 import { MisPeliculas } from './features/mis-peliculas/mis-peliculas';
+import { AdminFunciones } from './features/admin-funciones/admin-funciones';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -24,7 +25,8 @@ export const routes: Routes = [
         canMatch: [adminGuard],
         children: [
             { path: '', redirectTo: 'peliculas', pathMatch: 'full' },
-            { path: 'peliculas', component: AdminPeliculas }
+            { path: 'peliculas', component: AdminPeliculas },
+            { path: 'funciones', component: AdminFunciones }, // agregar esta línea
         ]
     },
     { path: '**', redirectTo: 'home' }
