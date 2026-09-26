@@ -34,6 +34,64 @@
                 }
             </div>
 
+
+            <div class="seccion-reviews">
+                <h3>Calificaciones y comentarios</h3>
+
+                @if (promedioEstrellas() > 0) {
+                    <p class="promedio-estrellas">⭐ {{ promedioEstrellas() }} / 5 ({{ reviewsDeEstaPelicula().length }} calificaciones)</p>
+                } @else {
+                    <p class="sin-reviews">Todavía no hay calificaciones para esta película.</p>
+                }
+
+                @if (authService.currentUser()) {
+                    <div class="form-review">
+                        <p>{{ miReview() ? 'Editar tu calificación' : 'Dejá tu calificación' }}</p>
+
+                        <div class="selector-estrellas" (mouseleave)="estrellaHover.set(0)">
+                            @for (n of [1, 2, 3, 4, 5]; track n) {
+                                <button 
+                                    type="button"
+                                    class="estrella"
+                                    [class.activa]="n <= (estrellaHover() || estrellasSeleccionadas())"
+                                    (mouseenter)="estrellaHover.set(n)"
+                                    (click)="estrellasSeleccionadas.set(n)">
+                                    ★
+                                </button>
+                            }
+                        </div>
+
+                        <textarea 
+                            [value]="comentarioTexto()" 
+                            (input)="comentarioTexto.set($any($event.target).value)"
+                            placeholder="Comentario corto (opcional)"
+                            maxlength="200"></textarea>
+
+                        <button 
+                            class="boton-enviar-review"
+                            [disabled]="estrellasSeleccionadas() === 0 || guardandoReview()"
+                            (click)="enviarReview()">
+                            {{ guardandoReview() ? 'Guardando...' : (miReview() ? 'Actualizar' : 'Enviar') }}
+                        </button>
+                    </div>
+                } @else {
+                    <p class="aviso-login">Iniciá sesión para dejar tu calificación.</p>
+                }
+
+                <div class="lista-reviews">
+                    @for (review of reviewsDeEstaPelicula(); track review.id) {
+                        <div class="review-item">
+                            <span class="review-estrellas">{{ '★'.repeat(review.estrellas) }}{{ '☆'.repeat(5 - review.estrellas) }}</span>
+                            @if (review.comentario) {
+                                <p class="review-comentario">{{ review.comentario }}</p>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+
+
             <button (click)="volverHome()"> Home </button>
         </div>
     } @else {

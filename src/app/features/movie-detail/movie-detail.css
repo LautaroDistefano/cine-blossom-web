@@ -142,3 +142,151 @@ section {
 .funcion-card button:hover {
     opacity: 0.85;
 }
+
+.seccion-reviews {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(201, 162, 39, 0.15);
+}
+
+.seccion-reviews h3 {
+    font-family: var(--font-display, 'Playfair Display', serif);
+    color: var(--color-accent);
+    font-size: 1.2rem;
+    margin: 0 0 0.75rem;
+}
+
+.promedio-estrellas {
+    color: var(--color-text);
+    font-size: 0.95rem;
+    margin: 0 0 1.25rem;
+}
+
+.sin-reviews {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin: 0 0 1.25rem;
+}
+
+/* --- Formulario --- */
+
+.form-review {
+    background-color: var(--color-surface);
+    border: 1px solid rgba(201, 162, 39, 0.15);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 1.5rem;
+}
+
+.form-review > p {
+    margin: 0 0 10px;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.selector-estrellas {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.selector-estrellas .estrella {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.estrella:hover {
+    transform: scale(1.15);
+}
+
+.selector-estrellas .estrella.activa {
+    color: var(--color-accent);
+}
+
+.form-review textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 10px;
+    background-color: transparent;
+    border: 1px solid var(--color-text-muted);
+    border-radius: 6px;
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.form-review textarea:focus {
+    border-color: var(--color-accent);
+}
+
+.form-review textarea::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+}
+
+.boton-enviar-review {
+    margin-top: 10px;
+    padding: 8px 20px;
+    background-color: var(--color-accent);
+    border: none;
+    color: var(--color-bg);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.boton-enviar-review:hover:not(:disabled) {
+    opacity: 0.85;
+}
+
+.boton-enviar-review:disabled {
+    background-color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.aviso-login {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+}
+
+/* --- Lista de reviews existentes --- */
+
+.lista-reviews {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.review-item {
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.review-estrellas {
+    color: var(--color-accent);
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+}
+
+.review-comentario {
+    margin: 6px 0 0;
+    color: var(--color-text);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
