@@ -7,6 +7,8 @@ import { Sala } from './features/sala/sala';
 import { adminGuard } from './core/guards/admin-guard';
 import { AdminPeliculas } from './features/admin-peliculas/admin-peliculas';
 import { Proximamente } from './features/proximamente/proximamente';
+import { authGuard } from './core/guards/authGuard';
+import { MisPeliculas } from './features/mis-peliculas/mis-peliculas';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -16,6 +18,7 @@ export const routes: Routes = [
     { path: 'pelicula/:id/reservar/:funcionId', component: Sala },
     { path: 'login', component: Login },
     { path: 'register', component: Register },
+    { path: 'mis-peliculas', component: MisPeliculas, canActivate: [authGuard] },
     {
         path: 'admin',
         canMatch: [adminGuard],

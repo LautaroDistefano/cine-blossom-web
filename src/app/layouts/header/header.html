@@ -21,6 +21,10 @@
                     </li>
                 }
 
+                @if (authService.currentUser()) {
+                <li><a routerLink="/mis-peliculas" routerLinkActive="activo">Mis películas</a></li>
+                }
+
                 @if (authService.currentUser(); as usuario) {
                     <li class="usuario-info">{{ usuario.email }}</li>
                     <li>

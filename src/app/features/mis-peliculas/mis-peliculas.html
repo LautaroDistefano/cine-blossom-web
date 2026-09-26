@@ -1,0 +1,20 @@
+<section class="mis-peliculas-contenedor">
+    <h2>Mis películas</h2>
+
+    @if (reviewService.misPeliculasConReview().length === 0) {
+        <p class="sin-peliculas">Todavía no calificaste ninguna película.</p>
+    } @else {
+        <div class="grid-mis-peliculas">
+        @for (item of reviewService.misPeliculasConReview(); track item.pelicula.id) {
+            <div class="card-mi-pelicula">
+            <img [src]="item.pelicula.imagen" [alt]="item.pelicula.nombre">
+            <div class="info-mi-pelicula">
+                <h3>{{ item.pelicula.nombre }}</h3>
+                <p class="fecha-vista">{{ item.fecha | date: 'dd/MM/yyyy' }}</p>
+                <span class="mi-calificacion">{{ '★'.repeat(item.estrellas) }}{{ '☆'.repeat(5 - item.estrellas) }}</span>
+            </div>
+            </div>
+        }
+        </div>
+    }
+</section>

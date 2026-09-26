@@ -3,6 +3,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { Review } from '../models/reviews.interface'
+import { MovieService } from './movie.service';
 
 interface ReviewRow {
     id: string;
@@ -17,6 +18,7 @@ interface ReviewRow {
 export class ReviewService {
     private supabase = inject(SupabaseService).client;
     private authService = inject(AuthService);
+    private movieService = inject(MovieService);
 
     private reviewsSignal = signal<Review[]>([]);
     cargando = signal(false);
@@ -114,6 +116,24 @@ export class ReviewService {
         await this.cargarReviews();
         return true;
     }
+
+    misPeliculasConReview = computed(() => {
+        const reviews = this.misReviews();
+        const peliculas = this.movieService.peliculas();
+
+        return reviews
+            .map(review => {
+                const pelicula = peliculas.find(p => p.id === review.peliculaId);
+                if (!pelicula) return null;
+                return {
+                    pelicula,
+                    estrellas: review.estrellas,
+                    comentario: review.comentario,
+                    fecha: review.createdAt
+                };
+            })
+            .filter(item => item !== null);
+    });
 
     async eliminarReview(reviewId: string): Promise<boolean> {
         const { error } = await this.supabase.from('reviews').delete().eq('id', reviewId);
