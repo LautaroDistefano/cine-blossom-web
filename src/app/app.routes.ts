@@ -26,7 +26,7 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'peliculas', pathMatch: 'full' },
             { path: 'peliculas', component: AdminPeliculas },
-            { path: 'funciones', component: AdminFunciones }, // agregar esta línea
+            { path: 'funciones', component: AdminFunciones },
         ]
     },
     { path: '**', redirectTo: 'home' }
