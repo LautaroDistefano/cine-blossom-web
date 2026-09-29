@@ -51,8 +51,8 @@ export class AdminFunciones {
       return;
     }
 
-    const horarioISO = new Date(valores.horario!).toISOString();
-    const idEditando = this.editandoId();
+  const horarioISO = new Date(valores.horario!).toISOString();
+  const idEditando = this.editandoId();
 
     // Al editar, se intenta mantener la sala que ya tenía la función
     const salaActual = idEditando

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal, OnInit } from '@angular/core';
+import { Component, computed, inject, input, signal, OnInit, OnDestroy } from '@angular/core';
 import { SalaService } from '../../core/services/sala.service';
 import { FuncionesService } from '../../core/services/funciones.service';
 import { MovieService } from '../../core/services/movie.service';
@@ -18,7 +18,7 @@ import { calcularEdad } from '../../utils/fecha.utils';
     styleUrl: './sala.css',
     templateUrl: './sala.html',
 })
-export class Sala implements OnInit {
+export class Sala implements OnInit, OnDestroy {
     private salaService = inject(SalaService);
     private ticketService = inject(TicketService);
     private entradaService = inject(EntradaService);
@@ -182,13 +182,22 @@ export class Sala implements OnInit {
     }
 
     async ngOnInit() {
-        this.salaService.cargarButacasOcupadas(this.funcionId());
+        // Primero cargamos las butacas que ya están ocupadas
+        await this.salaService.cargarButacasOcupadas(this.funcionId());
+
+        // Después nos quedamos escuchando las compras nuevas
+        this.salaService.escucharButacas(this.funcionId());
 
         const usuario = this.authService.currentUser();
         if (usuario) {
             const primera = await this.entradaService.esPrimeraCompra(usuario.id);
             this.esPrimeraCompra.set(primera);
         }
+    }
+
+    ngOnDestroy() {
+    // Al salir de la pantalla, cortamos la conexión
+    this.salaService.dejarDeEscuchar();
     }
 
     volverHome() {

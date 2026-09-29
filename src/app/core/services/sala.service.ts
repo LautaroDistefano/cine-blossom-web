@@ -2,12 +2,15 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { Butaca, FilaSala, CategoriaButaca } from '../models/sala.interface';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 const LETRAS = 'ABCDEFGHIJKLMNOPQRST'.split('');
 
 @Injectable({ providedIn: 'root' })
 export class SalaService {
     private supabase = inject(SupabaseService).client;
+
+    private canal: RealtimeChannel | null = null;
 
     // Estado: qué butacas están ocupadas para la función que se está mirando ahora
     private butacasOcupadasSignal = signal<string[]>([]);
@@ -78,6 +81,31 @@ export class SalaService {
             }
             return butacasBloque;
         });
+    }
+
+    // Se queda escuchando: cada vez que alguien compra para esta función, agrega sus butacas a las ocupadas
+    escucharButacas(funcionId: string) {
+        this.dejarDeEscuchar();
+
+        this.canal = this.supabase
+            .channel(`butacas-${funcionId}`)
+            .on(
+                'postgres_changes',
+                { event: 'INSERT', schema: 'public', table: 'entradas', filter: `funcion_id=eq.${funcionId}` },
+                (payload) => {
+                    const nuevas = payload.new['butacas'] as string[];
+                    this.butacasOcupadasSignal.update(actuales => [...actuales, ...nuevas]);
+                }
+            )
+            .subscribe();
+    }
+
+    // Deja de escuchar (hay que llamarlo al salir de la pantalla)
+    dejarDeEscuchar() {
+        if (this.canal) {
+            this.supabase.removeChannel(this.canal);
+            this.canal = null;
+        }
     }
 }
 
