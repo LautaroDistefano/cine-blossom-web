@@ -81,13 +81,13 @@ export class MovieService {
         return computed(() => this.peliculasSignal().find(p => p.id === id));
     }
 
-    // --- Cargamos los generos unicos ---
+    //Cargamos los generos que sean unicos
     generosDisponibles = computed(() => {
         const generosPelicula = this.peliculasSignal().flatMap(p => p.generos);
         return [... new Set(generosPelicula)].sort();
     })
 
-    // --- Operaciones de escritura (para el admin, RF06) ---
+    // Operaciones de escritura para el ADMIN RF06 (CRUD)
 
     async agregarPelicula(pelicula: Omit<Movie, 'id'>): Promise<boolean> {
         const { error } = await this.supabase.from('peliculas').insert({

@@ -18,6 +18,7 @@
                 @if (authService.rolActual() === 'admin') {
                     <li><a routerLink="/admin/peliculas" routerLinkActive="activo">Admin Películas</a></li>
                     <li><a routerLink="/admin/funciones" routerLinkActive="activo">Admin Funciones</a></li>
+                    <li><a routerLink="/admin/candybar" routerLinkActive="activo">Admin Candy Bar</a></li>
                 }
 
                 @if (authService.currentUser()) {

@@ -10,6 +10,7 @@ import { Proximamente } from './features/proximamente/proximamente';
 import { authGuard } from './core/guards/authGuard';
 import { MisPeliculas } from './features/mis-peliculas/mis-peliculas';
 import { AdminFunciones } from './features/admin-funciones/admin-funciones';
+import { AdminCandybar } from './features/admin-candy-bar/admin-candy-bar';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -27,6 +28,7 @@ export const routes: Routes = [
             { path: '', redirectTo: 'peliculas', pathMatch: 'full' },
             { path: 'peliculas', component: AdminPeliculas },
             { path: 'funciones', component: AdminFunciones },
+            { path: 'candybar', component: AdminCandybar }
         ]
     },
     { path: '**', redirectTo: 'home' }

@@ -1,0 +1,57 @@
+<section class="admin-contenedor">
+    <h2>Gestión de candy bar</h2>
+
+    <form [formGroup]="productoForm" (ngSubmit)="onSubmit()" class="form-funcion">
+        <h3>{{ editandoId() ? 'Editando producto' : 'Nuevo producto' }}</h3>
+
+        <input formControlName="nombre" placeholder="Nombre">
+        <input formControlName="precio" type="number" min="0" placeholder="Precio">
+        <input formControlName="categoria" placeholder="Categoría (ej: bebidas, combos)">
+        <input formControlName="imagen" placeholder="URL de imagen">
+        <textarea formControlName="descripcion" placeholder="Descripción (opcional)"></textarea>
+
+        <label class="check-disponible">
+        <input type="checkbox" formControlName="disponible">
+        Disponible
+        </label>
+
+        @if (error()) {
+        <p class="error-msg">{{ error() }}</p>
+        }
+
+        <div class="acciones-form">
+        <button type="submit" [disabled]="productoForm.invalid || guardando()">
+            {{ guardando() ? 'Guardando...' : (editandoId() ? 'Guardar cambios' : 'Crear producto') }}
+        </button>
+        @if (editandoId()) {
+            <button type="button" (click)="cancelarEdicion()">Cancelar edición</button>
+        }
+        </div>
+    </form>
+
+    <table class="tabla-peliculas">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Disponible</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (producto of candyBarService.productos(); track producto.id) {
+            <tr>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.categoria }}</td>
+            <td>${{ producto.precio }}</td>
+            <td>{{ producto.disponible ? 'Sí' : 'No' }}</td>
+            <td>
+                <button (click)="editar(producto)">Editar</button>
+                <button (click)="eliminar(producto.id)">Eliminar</button>
+            </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</section>

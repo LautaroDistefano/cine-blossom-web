@@ -73,5 +73,55 @@ export class ProductoCandyBarService {
             productos: productos.filter(p => p.categoria === categoria)
         }));
     });
+
+    async agregarProducto(producto: Omit<ProductoCandyBar, 'id'>): Promise<boolean> {
+        const { error } = await this.supabase.from('productos_candybar').insert({
+            nombre: producto.nombre,
+            descripcion: producto.descripcion,
+            precio: producto.precio,
+            categoria: producto.categoria,
+            imagen: producto.imagen,
+            disponible: producto.disponible
+        });
+
+        if (error) {
+            console.error('Error al agregar producto:', error);
+            return false;
+        }
+
+        await this.cargarProductos();
+        return true;
+    }
+
+    async editarProducto(id: string, cambios: Omit<ProductoCandyBar, 'id'>): Promise<boolean> {
+        const { error } = await this.supabase.from('productos_candybar').update({
+            nombre: cambios.nombre,
+            descripcion: cambios.descripcion,
+            precio: cambios.precio,
+            categoria: cambios.categoria,
+            imagen: cambios.imagen,
+            disponible: cambios.disponible
+        }).eq('id', id);
+
+        if (error) {
+            console.error('Error al editar producto:', error);
+            return false;
+        }
+
+        await this.cargarProductos();
+        return true;
+    }
+
+    async eliminarProducto(id: string): Promise<boolean> {
+        const { error } = await this.supabase.from('productos_candybar').delete().eq('id', id);
+
+        if (error) {
+            console.error('Error al eliminar producto:', error);
+            return false;
+        }
+
+        await this.cargarProductos();
+        return true;
+    }
 }
 
