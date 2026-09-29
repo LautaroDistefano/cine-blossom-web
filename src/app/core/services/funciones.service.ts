@@ -1,6 +1,7 @@
 import { computed, inject, Injectable, Service, signal } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { Funcion } from '../models/funcion.interface';
+import { CANTIDAD_SALAS } from '../models/sala.interface';
 
 interface FuncionRow {
     id: string;
@@ -112,7 +113,7 @@ export class FuncionesService {
     }
 
     // Verifica si programar una función en salaId a horarioISO (con esa duración) choca
-    // con alguna función existente en la misma sala, respetando 30 min de buffer.
+    // con alguna función existente en la misma sala, respetando la diferencia de los 30 minutos.
     // funcionIdExcluir sirve para que, al editar una función, no choque "contra sí misma".
     hayConflictoDeHorario(
         salaId: number,
@@ -136,5 +137,25 @@ export class FuncionesService {
             // Y el existente empieza antes de que termine (con buffer) el nuevo.
             return inicioNuevo < finExistenteConBuffer && inicioExistente < finNuevoConBuffer;
         });
+    }
+
+    asignarSalaLibre(
+        horarioISO: string,
+        duracionMinutos: number,
+        duracionesPorPelicula: Map<string, number>,
+        funcionIdExcluir?: string,
+        salaPreferida?: number
+    ): number | null {
+        const salas = Array.from({ length: CANTIDAD_SALAS }, (_, i) => i + 1);
+        const candidatas = salaPreferida
+            ? [salaPreferida, ...salas.filter(s => s !== salaPreferida)]
+            : salas;
+
+        for (const salaId of candidatas) {
+            if (!this.hayConflictoDeHorario(salaId, horarioISO, duracionMinutos, duracionesPorPelicula, funcionIdExcluir)) {
+                return salaId;
+            }
+        }
+        return null;
     }
 }

@@ -9,7 +9,7 @@ import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-admin-funciones',
   standalone: true,
-  imports: [ReactiveFormsModule,DatePipe],
+  imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './admin-funciones.html',
   styleUrl: './admin-funciones.css',
 })
@@ -22,9 +22,9 @@ export class AdminFunciones {
   guardando = signal(false);
   error = signal<string | null>(null);
 
+  // La sala ya no se elige: la asigna el sistema
   funcionForm = this.fb.group({
     peliculaId: ['', Validators.required],
-    salaId: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
     horario: ['', Validators.required],
     formato: ['2D', Validators.required],
     idioma: ['castellano', Validators.required],
@@ -51,19 +51,24 @@ export class AdminFunciones {
       return;
     }
 
-    const salaId = Number(valores.salaId);
     const horarioISO = new Date(valores.horario!).toISOString();
+    const idEditando = this.editandoId();
 
-    const hayConflicto = this.funcionesService.hayConflictoDeHorario(
-      salaId,
+    // Al editar, se intenta mantener la sala que ya tenía la función
+    const salaActual = idEditando
+      ? this.funcionesService.funciones().find(f => f.id === idEditando)?.salaId
+      : undefined;
+
+    const salaId = this.funcionesService.asignarSalaLibre(
       horarioISO,
       pelicula.duracion,
       this.duracionesPorPelicula(),
-      this.editandoId() ?? undefined
+      idEditando ?? undefined,
+      salaActual
     );
 
-    if (hayConflicto) {
-      this.error.set('Esa sala ya tiene otra función que se superpone (mínimo 30 min entre funciones).');
+    if (salaId === null) {
+      this.error.set('No hay ninguna sala libre en ese horario (se requieren 30 min entre funciones).');
       return;
     }
 
@@ -77,9 +82,8 @@ export class AdminFunciones {
       idioma: valores.idioma as any,
     };
 
-    const id = this.editandoId();
-    const exito = id
-      ? await this.funcionesService.editarFuncion(id, funcion)
+    const exito = idEditando
+      ? await this.funcionesService.editarFuncion(idEditando, funcion)
       : await this.funcionesService.agregarFuncion(funcion);
 
     this.guardando.set(false);
@@ -95,8 +99,7 @@ export class AdminFunciones {
     this.editandoId.set(funcion.id);
     this.funcionForm.setValue({
       peliculaId: funcion.peliculaId,
-      salaId: funcion.salaId,
-      horario: funcion.horario.slice(0, 16), // formato requerido por datetime-local
+      horario: this.aFormatoDatetimeLocal(funcion.horario),
       formato: funcion.formato,
       idioma: funcion.idioma,
     });
@@ -105,7 +108,7 @@ export class AdminFunciones {
   cancelarEdicion() {
     this.editandoId.set(null);
     this.error.set(null);
-    this.funcionForm.reset({ salaId: 1, formato: '2D', idioma: 'castellano' });
+    this.funcionForm.reset({ formato: '2D', idioma: 'castellano' });
   }
 
   async eliminar(id: string) {
@@ -116,5 +119,12 @@ export class AdminFunciones {
 
   nombrePelicula(peliculaId: string): string {
     return this.movieService.peliculas().find(p => p.id === peliculaId)?.nombre ?? '—';
+  }
+
+  // Convierte un ISO en UTC a "YYYY-MM-DDTHH:mm" en hora local, que es lo que espera <input type="datetime-local">
+  private aFormatoDatetimeLocal(iso: string): string {
+    const d = new Date(iso);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   }
 }

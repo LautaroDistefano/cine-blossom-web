@@ -13,3 +13,5 @@ export interface Butaca {
     categoria: CategoriaButaca;
     ocupada: boolean;
 }
+
+export const CANTIDAD_SALAS = 5;
