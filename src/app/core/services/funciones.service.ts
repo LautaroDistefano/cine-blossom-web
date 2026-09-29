@@ -143,19 +143,25 @@ export class FuncionesService {
         horarioISO: string,
         duracionMinutos: number,
         duracionesPorPelicula: Map<string, number>,
-        funcionIdExcluir?: string,
-        salaPreferida?: number
+        funcionIdExcluir?: string
     ): number | null {
-        const salas = Array.from({ length: CANTIDAD_SALAS }, (_, i) => i + 1);
-        const candidatas = salaPreferida
-            ? [salaPreferida, ...salas.filter(s => s !== salaPreferida)]
-            : salas;
+        // Probamos las salas de la 1 a la 5, en orden
+        for (let sala = 1; sala <= CANTIDAD_SALAS; sala++) {
+            const hayConflicto = this.hayConflictoDeHorario(
+                sala,
+                horarioISO,
+                duracionMinutos,
+                duracionesPorPelicula,
+                funcionIdExcluir
+            );
 
-        for (const salaId of candidatas) {
-            if (!this.hayConflictoDeHorario(salaId, horarioISO, duracionMinutos, duracionesPorPelicula, funcionIdExcluir)) {
-                return salaId;
+            // La primera sala sin conflicto es la que usamos
+            if (!hayConflicto) {
+                return sala;
             }
         }
+
+        // Si ninguna sala sirvió, devolvemos null
         return null;
     }
 }

@@ -63,8 +63,7 @@ export class AdminFunciones {
       horarioISO,
       pelicula.duracion,
       this.duracionesPorPelicula(),
-      idEditando ?? undefined,
-      salaActual
+      idEditando ?? undefined
     );
 
     if (salaId === null) {
