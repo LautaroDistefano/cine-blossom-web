@@ -45,10 +45,11 @@ export class SalaService {
     async cargarButacasOcupadas(funcionId: string): Promise<void> {
         this.cargando.set(true);
 
-        const { data, error } = await this.supabase
-            .from('entradas')
-            .select('butacas')
-            .eq('funcion_id', funcionId);
+    const { data, error } = await this.supabase
+        .from('entradas')
+        .select('butacas')
+        .eq('funcion_id', funcionId)
+        .eq('cancelada', false);
 
         if (error) {
             console.error('Error al cargar butacas ocupadas:', error);
@@ -91,11 +92,13 @@ export class SalaService {
             .channel(`butacas-${funcionId}`)
             .on(
                 'postgres_changes',
-                { event: 'INSERT', schema: 'public', table: 'entradas', filter: `funcion_id=eq.${funcionId}` },
+                { event: 'UPDATE', schema: 'public', table: 'entradas', filter: `funcion_id=eq.${funcionId}` },
                 (payload) => {
-                    console.log('Llegó una compra nueva:', payload);
-                    const nuevas = payload.new['butacas'] as string[];
-                    this.butacasOcupadasSignal.update(actuales => [...actuales, ...nuevas]);
+                    // Solo nos interesan las cancelaciones (validar un QR también es un UPDATE)
+                    if (payload.new['cancelada']) {
+                        const liberadas = payload.new['butacas'] as string[];
+                        this.butacasOcupadasSignal.update(actuales => actuales.filter(b => !liberadas.includes(b)));
+                    }
                 }
             )
             .subscribe((estado) => {

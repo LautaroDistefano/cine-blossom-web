@@ -28,6 +28,9 @@ export class PuntosService {
     puntosGastados = signal(0);
     // Historial de canjes (RF04)
     canjes = signal<Canje[]>([]);
+    creditosDisponibles = signal(0);
+
+    
 
     constructor() {
         // Cada vez que cambia el usuario (login o logout), se recalculan los puntos
@@ -38,23 +41,22 @@ export class PuntosService {
     }
 
     // Lo que puede usar ahora
-    puntosDisponibles = computed(() => this.puntosGanados() - this.puntosGastados());
+    puntosDisponibles = computed(() => Math.max(0, this.puntosGanados() - this.puntosGastados()));
 
     async cargarPuntos(): Promise<void> {
         const usuarioId = this.authService.currentUser()?.id;
 
-        // Si no hay usuario logueado, todo queda en cero
         if (!usuarioId) {
             this.puntosGanados.set(0);
             this.puntosGastados.set(0);
+            this.creditosDisponibles.set(0);
             this.canjes.set([]);
             return;
         }
 
-        // 1. Sumamos lo que pagó en sus entradas
         const { data: entradas, error: errorEntradas } = await this.supabase
             .from('entradas')
-            .select('precio_total')
+            .select('precio_total, creditos_usados, cancelada')
             .eq('usuario_id', usuarioId);
 
         if (errorEntradas) {
@@ -62,12 +64,22 @@ export class PuntosService {
             return;
         }
 
-        const ganados = (entradas ?? []).reduce(
-            (suma, e) => suma + Math.floor(Number(e.precio_total)),
-            0
-        );
+        let ganados = 0;     // puntos: pesos pagados en compras no canceladas
+        let recuperado = 0;  // créditos: total de las compras canceladas
+        let usado = 0;       // créditos ya gastados en compras nuevas
 
-        // 2. Traemos sus canjes
+        for (const e of entradas ?? []) {
+            const total = Number(e.precio_total);
+            const creditos = Number(e.creditos_usados);
+            usado += creditos;
+
+            if (e.cancelada) {
+                recuperado += total;
+            } else {
+                ganados += Math.floor(total - creditos);
+            }
+        }
+
         const { data: canjes, error: errorCanjes } = await this.supabase
             .from('canjes')
             .select('*')
@@ -87,6 +99,7 @@ export class PuntosService {
         }));
 
         this.puntosGanados.set(ganados);
+        this.creditosDisponibles.set(recuperado - usado);
         this.canjes.set(lista);
         this.puntosGastados.set(lista.reduce((suma, c) => suma + c.puntosGastados, 0));
     }

@@ -86,6 +86,17 @@
 
     <p class="total-reserva">Total: ${{ totalReserva() }}</p>
 
+    @if (authService.currentUser() && puntosService.creditosDisponibles() > 0) {
+        <label>
+            <input type="checkbox" [checked]="usarCreditos()" (change)="usarCreditos.set(!usarCreditos())">
+            Usar mis créditos (${{ puntosService.creditosDisponibles() }} disponibles)
+        </label>
+        @if (usarCreditos()) {
+            <p>Créditos aplicados: −${{ creditosAUsar() }}</p>
+            <p>Total a pagar: ${{ totalAPagar() }}</p>
+        }
+    }
+
     <div class="resumen-reserva">
         <button 
             [disabled]="butacasSeleccionadas().length === 0 || reservando()" 

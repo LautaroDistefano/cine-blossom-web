@@ -1,0 +1,41 @@
+<section class="admin-contenedor">
+    <h2>Mis compras</h2>
+    <p>Créditos disponibles: ${{ puntosService.creditosDisponibles() }}</p>
+
+    @if (cargando()) {
+        <p>Cargando...</p>
+    } @else if (compras().length === 0) {
+        <p>Todavía no tenés compras.</p>
+    } @else {
+        <table>
+            <thead>
+                <tr>
+                    <th>Película</th>
+                    <th>Horario</th>
+                    <th>Butacas</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (compra of compras(); track compra.id) {
+                    <tr>
+                        <td>{{ nombrePelicula(compra.funcionId) }}</td>
+                        <td>{{ horario(compra.funcionId) | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td>{{ compra.butacas.join(', ') }}</td>
+                        <td>${{ compra.precioTotal }}</td>
+                        <td>{{ compra.cancelada ? 'Cancelada' : (compra.validada ? 'Usada' : 'Activa') }}</td>
+                        <td>
+                            @if (puedeCancelar(compra)) {
+                                <button (click)="cancelar(compra)">Cancelar compra</button>
+                            } @else {
+                                <small>{{ motivoNoCancelable(compra) }}</small>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</section>

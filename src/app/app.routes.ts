@@ -13,6 +13,7 @@ import { AdminFunciones } from './features/admin-funciones/admin-funciones';
 import { AdminCandybar } from './features/admin-candy-bar/admin-candy-bar';
 import { ValidarEntrada } from './features/validar-entrada/validar-entrada';
 import { empleadoGuard } from './core/guards/empleado-guard';
+import { MisCompras } from './features/mis-compras/mis-compras';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -23,6 +24,7 @@ export const routes: Routes = [
     { path: 'login', component: Login },
     { path: 'register', component: Register },
     { path: 'mis-peliculas', component: MisPeliculas, canActivate: [authGuard] },
+    { path: 'mis-compras', component: MisCompras, canActivate: [authGuard] },
     { path: 'empleado', component: ValidarEntrada, canMatch: [empleadoGuard] },
     {
         path: 'admin',

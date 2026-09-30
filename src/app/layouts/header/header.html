@@ -27,14 +27,16 @@
 
                 @if (authService.currentUser()) {
                 <li><a routerLink="/mis-peliculas" routerLinkActive="activo">Mis películas</a></li>
+                <li><a routerLink="/mis-compras">Mis compras</a></li>
                 <li><span class="puntos">{{ puntosService.puntosDisponibles() }} PTS</span></li>
-                
                 }
 
                 @if (authService.currentUser(); as usuario) {
                     <li class="usuario-info">{{ usuario.email }}</li>
                     <li>
                         <button (click)="cerrarSesion()" class="boton-logout">Cerrar sesión</button>
+                    </li>
+                    <li>
                     </li>
                 } @else {
                     <li>

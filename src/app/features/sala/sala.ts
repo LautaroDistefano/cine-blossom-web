@@ -41,6 +41,7 @@ export class Sala implements OnInit, OnDestroy {
     bannerCerrado = signal(false);
     cuponAplicado = signal<Cupon | null>(null);
     codigoCupon = signal('');
+    usarCreditos = signal(false);
 
     // Productos ya pagados con puntos: no se cobran en pesos
     canjeados = signal<Map<string, number>>(new Map());
@@ -56,8 +57,15 @@ export class Sala implements OnInit, OnDestroy {
             bloques: this.salaService.generarBloquesDeFila(fila)
         }))
     );
-
     butacasSeleccionadas = signal<string[]>([]);
+
+    // Créditos que se aplican: no pueden pasar del total
+    creditosAUsar = computed(() =>
+        this.usarCreditos()
+            ? Math.min(this.puntosService.creditosDisponibles(), this.totalReserva())
+            : 0
+    );
+    totalAPagar = computed(() => this.totalReserva() - this.creditosAUsar());
 
     toggleButaca(codigo: string) {
         this.butacasSeleccionadas.update(actuales =>
@@ -184,7 +192,7 @@ export class Sala implements OnInit, OnDestroy {
         }
 
         const resultado = await this.entradaService.reservar(
-            this.funcionId(), seleccion, candyBarArray, this.totalReserva()
+            this.funcionId(), seleccion, candyBarArray, this.totalReserva(), this.creditosAUsar()
         );
 
         this.reservando.set(false);

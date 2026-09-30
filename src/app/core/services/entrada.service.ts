@@ -12,6 +12,8 @@ interface EntradaRow {
     codigo_qr: string | null;
     created_at: string;
     validada: boolean | null;
+    cancelada: boolean;
+    creditos_usados: number;
 }
 
 export interface Entrada {
@@ -29,8 +31,17 @@ export interface EntradaValidada {
 }
 
 export interface ResultadoValidacion {
-    estado: 'valida' | 'ya_usada' | 'inexistente' | 'error';
+    estado: 'valida' | 'ya_usada' | 'inexistente' | 'cancelada' | 'error';
     entrada?: EntradaValidada;
+}
+
+export interface Compra {
+    id: string;
+    funcionId: string;
+    butacas: string[];
+    precioTotal: number;
+    validada: boolean;
+    cancelada: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -46,7 +57,7 @@ export class EntradaService {
     }
 
     async cargarEntradas(): Promise<void> {
-        const { data, error } = await this.supabase.from('entradas').select('*');
+        const { data, error } = await this.supabase.from('entradas').select('*').eq('cancelada', false);
 
         if (error) {
             console.error('Error al cargar entradas:', error);
@@ -64,7 +75,7 @@ export class EntradaService {
         this.entradasSignal.set(entradas);
     }
 
-    async reservar(funcionId: string, butacas: string[], candyBar: any[], precioTotal: number): Promise<{ exito: boolean; codigoQr?: string }> {
+    async reservar(funcionId: string, butacas: string[], candyBar: any[], precioTotal: number, creditosUsados = 0): Promise<{ exito: boolean; codigoQr?: string }> {
         const usuarioId = this.authService.currentUser()?.id ?? null;
         const codigoQr = crypto.randomUUID().slice(0, 8).toUpperCase();
 
@@ -74,6 +85,7 @@ export class EntradaService {
             butacas: butacas,
             candy_bar: candyBar,
             precio_total: precioTotal,
+            creditos_usados: creditosUsados,
             codigo_qr: codigoQr
         });
 
@@ -90,7 +102,8 @@ export class EntradaService {
         const { count, error } = await this.supabase
             .from('entradas')
             .select('*', { count: 'exact', head: true })
-            .eq('usuario_id', usuarioId);
+            .eq('usuario_id', usuarioId)
+            .eq('cancelada', false);
 
         if (error) {
             console.error('Error al verificar compras previas:', error);
@@ -118,6 +131,11 @@ export class EntradaService {
             return { estado: 'inexistente' };
         }
 
+        // 3. Si cancela la compra, modificamos el estado
+        if (data.cancelada) {
+            return { estado: 'cancelada' };
+        }
+
         const entrada: EntradaValidada = {
             funcionId: data.funcion_id,
             butacas: data.butacas,
@@ -143,5 +161,52 @@ export class EntradaService {
         }
 
         return { estado: 'valida', entrada };
+    }
+
+    async obtenerMisCompras(): Promise<Compra[]> {
+        const usuarioId = this.authService.currentUser()?.id;
+        if (!usuarioId) return [];
+
+        const { data, error } = await this.supabase
+            .from('entradas')
+            .select('*')
+            .eq('usuario_id', usuarioId)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Error al cargar mis compras:', error);
+            return [];
+        }
+
+        return (data as EntradaRow[]).map(row => ({
+            id: row.id,
+            funcionId: row.funcion_id,
+            butacas: row.butacas,
+            precioTotal: row.precio_total,
+            validada: !!row.validada,
+            cancelada: row.cancelada
+        }));
+    }
+
+    async cancelarCompra(entradaId: string): Promise<boolean> {
+        const usuarioId = this.authService.currentUser()?.id;
+        if (!usuarioId) return false;
+
+        // Solo se cancela si es del usuario y todavía no estaba cancelada
+        const { data, error } = await this.supabase
+            .from('entradas')
+            .update({ cancelada: true })
+            .eq('id', entradaId)
+            .eq('usuario_id', usuarioId)
+            .eq('cancelada', false)
+            .select();
+
+        if (error || !data || data.length === 0) {
+            console.error('Error al cancelar la compra:', error);
+            return false;
+        }
+
+        await this.cargarEntradas();
+        return true;
     }
 }
