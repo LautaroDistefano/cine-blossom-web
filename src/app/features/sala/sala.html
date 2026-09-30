@@ -96,11 +96,22 @@
 
                     <div class="productos-categoria">
                         @for (producto of grupo.productos; track producto.id) {
-                            <app-product-card 
-                                [producto]="producto"
-                                [cantidad]="cantidadDe(producto.id)"
-                                (agregar)="agregarAlCarrito($event)"
-                                (quitar)="quitarDelCarrito($event)" />
+                            <div>
+                                <app-product-card 
+                                    [producto]="producto"
+                                    [cantidad]="cantidadDe(producto.id)"
+                                    (agregar)="agregarAlCarrito($event)"
+                                    (quitar)="quitarDelCarrito($event)" />
+
+                                @if (producto.costoPuntos != null) {
+                                    <button type="button" (click)="canjearProducto(producto.id)">
+                                        Canjear por {{ producto.costoPuntos }} PTS
+                                    </button>
+                                    @if (canjeados().get(producto.id)) {
+                                        <span>Canjeados: {{ canjeados().get(producto.id) }}</span>
+                                    }
+                                }
+                            </div>
                         }
                     </div>
                 </div>

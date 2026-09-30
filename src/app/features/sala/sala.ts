@@ -28,7 +28,7 @@ export class Sala implements OnInit, OnDestroy {
     public authService = inject(AuthService);
     public candyBarService = inject(ProductoCandyBarService);
     private router = inject(Router);
-    private puntosService = inject(PuntosService);
+    public puntosService = inject(PuntosService);
     configuracionService = inject(ConfiguracionService); 
 
     esPrimeraCompra = signal(false);
@@ -36,6 +36,9 @@ export class Sala implements OnInit, OnDestroy {
     reservando = signal(false);
     carritoCandyBar = signal<Map<string, number>>(new Map());
     bannerCerrado = signal(false);
+
+    // Productos ya pagados con puntos: no se cobran en pesos
+    canjeados = signal<Map<string, number>>(new Map());
 
     funcionId = input.required<string>();
 
@@ -149,6 +152,17 @@ export class Sala implements OnInit, OnDestroy {
             return { productoId, nombre: producto.nombre, cantidad, precioUnitario: producto.precio };
         });
 
+        // Los productos canjeados con puntos salen en la entrada con precio 0
+        for (const [productoId, cantidad] of this.canjeados()) {
+            const producto = this.candyBarService.productos().find(p => p.id === productoId)!;
+            candyBarArray.push({
+                productoId,
+                nombre: `${producto.nombre} (canjeado)`,
+                cantidad,
+                precioUnitario: 0
+            });
+        }
+
         const resultado = await this.entradaService.reservar(
             this.funcionId(), seleccion, candyBarArray, this.totalReserva()
         );
@@ -181,6 +195,34 @@ export class Sala implements OnInit, OnDestroy {
     async bajarDescuento() {
         const actual = this.configuracionService.configuracion().descuentoBienvenida;
         await this.configuracionService.actualizarDescuento(Math.max(0, actual - 5));
+    }
+
+    // --- PUNTOS ---
+    async canjearProducto(productoId: string) {
+        const producto = this.candyBarService.productos().find(p => p.id === productoId);
+        if (!producto || producto.costoPuntos == null) return;
+
+        if (!this.authService.currentUser()) {
+            alert('Tenés que iniciar sesión para canjear puntos.');
+            return;
+        }
+
+        if (this.puntosService.puntosDisponibles() < producto.costoPuntos) {
+            alert('No te alcanzan los puntos para canjear este producto.');
+            return;
+        }
+
+        const ok = await this.puntosService.canjear(producto.nombre, producto.costoPuntos);
+        if (!ok) {
+            alert('No se pudo realizar el canje. Probá de nuevo.');
+            return;
+        }
+
+        this.canjeados.update(actual => {
+            const nuevo = new Map(actual);
+            nuevo.set(productoId, (nuevo.get(productoId) ?? 0) + 1);
+            return nuevo;
+        });
     }
 
     async ngOnInit() {
