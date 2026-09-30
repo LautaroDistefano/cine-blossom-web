@@ -517,3 +517,17 @@ hr{
     font-size: 1.1rem;
     font-weight: 600;
 }
+
+.btn-canjear{
+    padding: 8px 16px;
+    border: none;
+    background-color: var(--color-surface);
+    color: var(--color-accent);
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 2rem;
+}
+
+.descuento-aplicado{
+    color: var(--color-text);
+}

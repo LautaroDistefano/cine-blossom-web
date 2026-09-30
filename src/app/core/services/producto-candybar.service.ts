@@ -69,6 +69,10 @@ export class ProductoCandyBarService {
         const productos = this.productosSignal();
         const categorias = [...new Set(productos.map(p => p.categoria))];
 
+        // Las categorías que empiezan con "combo" van primero
+        const esCombo = (categoria: string) => categoria.toLowerCase().startsWith('combo');
+        categorias.sort((a, b) => Number(esCombo(b)) - Number(esCombo(a)));
+
         return categorias.map(categoria => ({
             categoria,
             productos: productos.filter(p => p.categoria === categoria)

@@ -69,6 +69,9 @@
         </p>
     }
 
+    @if (puntosEnUso() > 0) {
+        <p>Puntos a gastar: {{ puntosEnUso() }} PTS</p>
+    }
     <p class="total-reserva">Total: ${{ totalReserva() }}</p>
 
     <div class="resumen-reserva">
@@ -104,11 +107,12 @@
                                     (quitar)="quitarDelCarrito($event)" />
 
                                 @if (producto.costoPuntos != null) {
-                                    <button type="button" (click)="canjearProducto(producto.id)">
+                                    <button type="button" class="btn-canjear" (click)="canjearProducto(producto.id)">
                                         Canjear por {{ producto.costoPuntos }} PTS
                                     </button>
                                     @if (canjeados().get(producto.id)) {
                                         <span>Canjeados: {{ canjeados().get(producto.id) }}</span>
+                                        <button type="button" (click)="quitarCanje(producto.id)">−</button>
                                     }
                                 }
                             </div>

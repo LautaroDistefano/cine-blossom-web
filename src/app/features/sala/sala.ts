@@ -163,6 +163,18 @@ export class Sala implements OnInit, OnDestroy {
             });
         }
 
+        // Recién ahora se gastan los puntos marcados
+        if (this.puntosEnUso() > 0) {
+            const descripcion = `Canje en ${pelicula.nombre}`;
+            const canjeOk = await this.puntosService.canjear(descripcion, this.puntosEnUso());
+
+            if (!canjeOk) {
+                this.reservando.set(false);
+                alert('No se pudieron usar los puntos. Probá de nuevo.');
+                return;
+            }
+        }
+
         const resultado = await this.entradaService.reservar(
             this.funcionId(), seleccion, candyBarArray, this.totalReserva()
         );
@@ -198,7 +210,18 @@ export class Sala implements OnInit, OnDestroy {
     }
 
     // --- PUNTOS ---
-    async canjearProducto(productoId: string) {
+    // Puntos que el usuario marcó para gastar, pero todavía no se gastaron
+    puntosEnUso = computed(() => {
+        const productos = this.candyBarService.productos();
+        let total = 0;
+        for (const [productoId, cantidad] of this.canjeados()) {
+            const producto = productos.find(p => p.id === productoId);
+            total += (producto?.costoPuntos ?? 0) * cantidad;
+        }
+        return total;
+    });
+
+    canjearProducto(productoId: string) {
         const producto = this.candyBarService.productos().find(p => p.id === productoId);
         if (!producto || producto.costoPuntos == null) return;
 
@@ -207,20 +230,29 @@ export class Sala implements OnInit, OnDestroy {
             return;
         }
 
-        if (this.puntosService.puntosDisponibles() < producto.costoPuntos) {
+        // Puntos que le quedan libres, sin contar lo que ya marcó
+        const libres = this.puntosService.puntosDisponibles() - this.puntosEnUso();
+        if (libres < producto.costoPuntos) {
             alert('No te alcanzan los puntos para canjear este producto.');
-            return;
-        }
-
-        const ok = await this.puntosService.canjear(producto.nombre, producto.costoPuntos);
-        if (!ok) {
-            alert('No se pudo realizar el canje. Probá de nuevo.');
             return;
         }
 
         this.canjeados.update(actual => {
             const nuevo = new Map(actual);
             nuevo.set(productoId, (nuevo.get(productoId) ?? 0) + 1);
+            return nuevo;
+        });
+    }
+
+    quitarCanje(productoId: string) {
+        this.canjeados.update(actual => {
+            const nuevo = new Map(actual);
+            const cantidad = nuevo.get(productoId) ?? 0;
+            if (cantidad <= 1) {
+                nuevo.delete(productoId);
+            } else {
+                nuevo.set(productoId, cantidad - 1);
+            }
             return nuevo;
         });
     }
