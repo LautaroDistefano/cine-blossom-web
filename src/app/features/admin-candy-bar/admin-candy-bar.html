@@ -8,7 +8,18 @@
         <input formControlName="precio" type="number" min="0" placeholder="Precio">
         <input formControlName="costoPuntos" type="number" min="1" placeholder="Costo en puntos (opcional)">
         <input formControlName="categoria" placeholder="Categoría (ej: bebidas, combos)">
-        <input formControlName="imagen" placeholder="URL de imagen">
+        <label>
+            Imagen
+            <input type="file" accept="image/*" (change)="onArchivoSeleccionado($event)">
+        </label>
+
+        @if (subiendoImagen()) {
+            <p>Subiendo imagen...</p>
+        }
+
+        @if (productoForm.value.imagen) {
+            <img [src]="productoForm.value.imagen" alt="Vista previa" width="80">
+        }
         <textarea formControlName="descripcion" placeholder="Descripción (opcional)"></textarea>
 
         <label class="check-disponible">
@@ -21,7 +32,7 @@
         }
 
         <div class="acciones-form">
-        <button type="submit" [disabled]="productoForm.invalid || guardando()">
+        <button type="submit" [disabled]="productoForm.invalid || guardando() || subiendoImagen()">
             {{ guardando() ? 'Guardando...' : (editandoId() ? 'Guardar cambios' : 'Crear producto') }}
         </button>
         @if (editandoId()) {

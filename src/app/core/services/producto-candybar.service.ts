@@ -130,5 +130,26 @@ export class ProductoCandyBarService {
         await this.cargarProductos();
         return true;
     }
+
+    // Sube la imagen al bucket y devuelve su URL publica (o null si falla)
+    async subirImagen(archivo: File): Promise<string | null> {
+        const extension = archivo.name.split('.').pop();
+        const nombreArchivo = `${crypto.randomUUID()}.${extension}`;
+
+        const { error } = await this.supabase.storage
+            .from('productos-candybar')
+            .upload(nombreArchivo, archivo);
+
+        if (error) {
+            console.error('Error al subir imagen:', error);
+            return null;
+        }
+
+        const { data } = this.supabase.storage
+            .from('productos-candybar')
+            .getPublicUrl(nombreArchivo);
+
+        return data.publicUrl;
+    }
 }
 

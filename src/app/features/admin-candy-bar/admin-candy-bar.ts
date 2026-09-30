@@ -16,6 +16,8 @@ export class AdminCandybar {
   editandoId = signal<string | null>(null);
   guardando = signal(false);
   error = signal<string | null>(null);
+  subiendoImagen = signal(false);
+
 
   productoForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -81,5 +83,31 @@ export class AdminCandybar {
     const confirmar = confirm('¿Seguro que querés eliminar este producto?');
     if (!confirmar) return;
     await this.candyBarService.eliminarProducto(id);
+  }
+
+  async onArchivoSeleccionado(event: Event) {
+      const input = event.target as HTMLInputElement;
+      const archivo = input.files?.[0];
+      if (!archivo) return;
+
+      if (!archivo.type.startsWith('image/')) {
+          this.error.set('El archivo tiene que ser una imagen.');
+          return;
+      }
+
+      this.subiendoImagen.set(true);
+      this.error.set(null);
+
+      const url = await this.candyBarService.subirImagen(archivo);
+
+      this.subiendoImagen.set(false);
+
+      if (!url) {
+          this.error.set('No se pudo subir la imagen. Probá de nuevo.');
+          return;
+      }
+
+      // Guardamos la URL en el mismo campo "imagen" que ya tenías
+      this.productoForm.patchValue({ imagen: url });
   }
 }
