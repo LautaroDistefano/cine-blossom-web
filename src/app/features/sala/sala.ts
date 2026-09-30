@@ -11,6 +11,8 @@ import { AuthService } from '../../core/services/auth.service';
 import { ConfiguracionService } from '../../core/services/configuracion.service';
 import { calcularEdad } from '../../utils/fecha.utils';
 import { PuntosService } from '../../core/services/puntos.service';
+import { CuponService } from '../../core/services/cupon.service';
+import { Cupon } from '../../core/models/cupon.interface';
 
 
 @Component({
@@ -30,12 +32,15 @@ export class Sala implements OnInit, OnDestroy {
     private router = inject(Router);
     public puntosService = inject(PuntosService);
     configuracionService = inject(ConfiguracionService); 
+    private cuponService = inject(CuponService);
 
     esPrimeraCompra = signal(false);
     mostrarCandyBar = signal(false);
     reservando = signal(false);
     carritoCandyBar = signal<Map<string, number>>(new Map());
     bannerCerrado = signal(false);
+    cuponAplicado = signal<Cupon | null>(null);
+    codigoCupon = signal('');
 
     // Productos ya pagados con puntos: no se cobran en pesos
     canjeados = signal<Map<string, number>>(new Map());
@@ -106,16 +111,19 @@ export class Sala implements OnInit, OnDestroy {
         return total;
     });
 
+    descuentoBienvenida = computed(() =>
+        this.esPrimeraCompra() ? this.configuracionService.configuracion().descuentoBienvenida : 0
+    );
+
+    descuentoCupon = computed(() => this.cuponAplicado()?.porcentaje ?? 0);
+
+    // No se acumulan: se aplica el mayor
+    descuentoAplicado = computed(() => Math.max(this.descuentoBienvenida(), this.descuentoCupon()));
+
     totalReserva = computed(() => {
         const precioPorButaca = 3000;
         const subtotal = this.butacasSeleccionadas().length * precioPorButaca + this.totalCandyBar();
-
-        if (this.esPrimeraCompra()) {
-            const descuento = this.configuracionService.configuracion().descuentoBienvenida;
-            return subtotal * (1 - descuento / 100);
-        }
-
-        return subtotal;
+        return subtotal * (1 - this.descuentoAplicado() / 100);
     });
 
     // --- Confirmar reserva ---
@@ -255,6 +263,39 @@ export class Sala implements OnInit, OnDestroy {
             }
             return nuevo;
         });
+    }
+
+    // --- CUPONES ---
+    async aplicarCupon() {
+        const codigo = this.codigoCupon().trim();
+        if (!codigo) return;
+
+        const cupon = await this.cuponService.buscar(codigo);
+        if (!cupon) {
+            alert('El cupón no existe o no está activo.');
+            return;
+        }
+
+        // Cupón segmentado: se revisa la edad, igual que en la validación de RF19
+        if (cupon.edadMinima != null) {
+            const fechaNac = this.authService.fechaNacimiento();
+
+            if (!fechaNac) {
+                alert(`Este cupón es para mayores de ${cupon.edadMinima}. Iniciá sesión con tu fecha de nacimiento cargada.`);
+                return;
+            }
+            if (calcularEdad(fechaNac) < cupon.edadMinima) {
+                alert(`Este cupón es solo para mayores de ${cupon.edadMinima}.`);
+                return;
+            }
+        }
+
+        this.cuponAplicado.set(cupon);
+    }
+
+    quitarCupon() {
+        this.cuponAplicado.set(null);
+        this.codigoCupon.set('');
     }
 
     async ngOnInit() {

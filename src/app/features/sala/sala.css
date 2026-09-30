@@ -531,3 +531,11 @@ hr{
 .descuento-aplicado{
     color: var(--color-text);
 }
+
+.texto-cupon{
+    color: var(--color-text);
+}
+
+.porcentaje-cupon{
+    color: var(--color-accent);;
+}

@@ -63,15 +63,27 @@
     </div>
     }
 
-    @if (esPrimeraCompra()) {
+    @if (descuentoAplicado() > 0) {
         <p class="descuento-aplicado">
-            ✓ Descuento de bienvenida aplicado ({{ configuracionService.configuracion().descuentoBienvenida }}%)
+            ✓ Descuento aplicado: {{ descuentoAplicado() }}% (no se acumulan, se usa el mayor)
         </p>
     }
 
     @if (puntosEnUso() > 0) {
         <p>Puntos a gastar: {{ puntosEnUso() }} PTS</p>
     }
+
+    <div class="cupon">
+        @if (cuponAplicado(); as cupon) {
+            <span class="texto-cupon">Cupón {{ cupon.codigo }}: <span class="porcentaje-cupon">{{ cupon.porcentaje }}%</span></span>
+            <button type="button" (click)="quitarCupon()">Quitar</button>
+        } @else {
+            <input #campoCupon type="text" placeholder="¿Tenés un cupón?"
+                [value]="codigoCupon()" (input)="codigoCupon.set(campoCupon.value)">
+            <button type="button" (click)="aplicarCupon()">Aplicar</button>
+        }
+    </div>
+
     <p class="total-reserva">Total: ${{ totalReserva() }}</p>
 
     <div class="resumen-reserva">
