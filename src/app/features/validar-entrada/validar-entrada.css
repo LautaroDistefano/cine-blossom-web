@@ -1,37 +1,155 @@
 .validar {
-    max-width: 480px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+    display: block;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: var(--color-text);
 }
 
+.validar h2 {
+    font-family: var(--font-display, 'Playfair Display', serif);
+    font-size: 1.8rem;
+    color: var(--color-accent);
+    margin: 0 0 0.75rem;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+}
+
+.validar > p {
+    margin: 0 0 1.5rem;
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+}
+
+/* Formulario */
 .formulario {
     display: flex;
-    gap: 0.5rem;
-    margin: 1rem 0;
+    gap: 10px;
+    margin-bottom: 2rem;
 }
 
 .formulario input {
     flex: 1;
-    padding: 0.6rem;
+    min-width: 0;
+    padding: 12px 16px;
+    background-color: var(--color-surface);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    border-radius: 6px;
+    color: var(--color-text);
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formulario input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.formulario input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 6px rgba(201, 162, 39, 0.35);
 }
 
 .formulario button {
-    padding: 0.6rem 1rem;
+    padding: 12px 28px;
+    background-color: var(--color-accent);
+    border: none;
+    border-radius: 6px;
+    color: var(--color-bg);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
     cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
 }
 
+.formulario button:hover:not(:disabled) {
+    opacity: 0.85;
+}
+
+.formulario button:disabled {
+    background-color: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.formulario button:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Resultado */
 .resultado {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 1rem;
+    padding: 20px 24px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-text-muted);
+    border-left-width: 4px;
+    border-radius: 10px;
 }
 
+.resultado h3 {
+    font-family: var(--font-display, 'Playfair Display', serif);
+    font-size: 1.25rem;
+    margin: 0 0 0.75rem;
+}
+
+.resultado p {
+    margin: 0 0 6px;
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+.resultado p:last-child {
+    margin-bottom: 0;
+}
+
+/* Entrada válida */
 .resultado.ok {
-    background: #d4f5dd;
-    color: #14532d;
+    border-color: #5f9e6e;
+    background-color: rgba(95, 158, 110, 0.1);
 }
 
+.resultado.ok h3 {
+    color: #8fcf9e;
+}
+
+/* Errores: ya usada, inexistente, cancelada, error */
 .resultado.error {
-    background: #fbd5d5;
-    color: #7f1d1d;
+    border-color: #a8404f;
+    background-color: rgba(92, 31, 42, 0.45);
+}
+
+.resultado.error h3 {
+    color: #e0a0a8;
+}
+
+.resultado.error p {
+    color: var(--color-text-muted);
+}
+
+/* Candy bar */
+.resultado ul {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 10px 14px;
+    background-color: rgba(16, 25, 42, 0.5);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    border-radius: 6px;
+}
+
+.resultado li {
+    padding: 4px 0;
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+@media (max-width: 500px) {
+    .validar {
+        padding: 1rem;
+    }
+
+    .formulario {
+        flex-direction: column;
+    }
 }

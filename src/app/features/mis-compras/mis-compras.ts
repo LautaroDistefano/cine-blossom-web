@@ -6,9 +6,10 @@ import { MovieService } from '../../core/services/movie.service';
 import { PuntosService } from '../../core/services/puntos.service';
 
 @Component({
-    selector: 'app-mis-compras',
     imports: [DatePipe],
+    selector: 'app-mis-compras',
     templateUrl: './mis-compras.html',
+    styleUrl: './mis-compras.css',
 })
 export class MisCompras implements OnInit {
     private entradaService = inject(EntradaService);

@@ -1,41 +1,52 @@
-<section class="admin-contenedor">
-    <h2>Mis compras</h2>
-    <p>Créditos disponibles: ${{ puntosService.creditosDisponibles() }}</p>
+<section class="mis-compras">
+    <h2 class="mis-compras__titulo">Mis compras</h2>
+    <p class="mis-compras__creditos">
+        Créditos disponibles: <span class="mis-compras__monto">${{ puntosService.creditosDisponibles() }}</span>
+    </p>
 
     @if (cargando()) {
-        <p>Cargando...</p>
+        <p class="mis-compras__mensaje">Cargando...</p>
     } @else if (compras().length === 0) {
-        <p>Todavía no tenés compras.</p>
+        <p class="mis-compras__mensaje">Todavía no tenés compras.</p>
     } @else {
-        <table>
-            <thead>
-                <tr>
-                    <th>Película</th>
-                    <th>Horario</th>
-                    <th>Butacas</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (compra of compras(); track compra.id) {
+        <div class="tabla-compras-wrapper">
+            <table class="tabla-compras">
+                <thead>
                     <tr>
-                        <td>{{ nombrePelicula(compra.funcionId) }}</td>
-                        <td>{{ horario(compra.funcionId) | date:'dd/MM/yyyy HH:mm' }}</td>
-                        <td>{{ compra.butacas.join(', ') }}</td>
-                        <td>${{ compra.precioTotal }}</td>
-                        <td>{{ compra.cancelada ? 'Cancelada' : (compra.validada ? 'Usada' : 'Activa') }}</td>
-                        <td>
-                            @if (puedeCancelar(compra)) {
-                                <button (click)="cancelar(compra)">Cancelar compra</button>
-                            } @else {
-                                <small>{{ motivoNoCancelable(compra) }}</small>
-                            }
-                        </td>
+                        <th>Película</th>
+                        <th>Horario</th>
+                        <th>Butacas</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @for (compra of compras(); track compra.id) {
+                        <tr>
+                            <td class="celda-pelicula">{{ nombrePelicula(compra.funcionId) }}</td>
+                            <td>{{ horario(compra.funcionId) | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td>{{ compra.butacas.join(', ') }}</td>
+                            <td class="celda-total">${{ compra.precioTotal }}</td>
+                            <td>
+                                <span class="estado"
+                                    [class.estado-cancelada]="compra.cancelada"
+                                    [class.estado-usada]="!compra.cancelada && compra.validada"
+                                    [class.estado-activa]="!compra.cancelada && !compra.validada">
+                                    {{ compra.cancelada ? 'Cancelada' : (compra.validada ? 'Usada' : 'Activa') }}
+                                </span>
+                            </td>
+                            <td class="celda-accion">
+                                @if (puedeCancelar(compra)) {
+                                    <button class="boton-cancelar-compra" (click)="cancelar(compra)">Cancelar compra</button>
+                                } @else {
+                                    <small class="motivo-no-cancelable">{{ motivoNoCancelable(compra) }}</small>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
 </section>
