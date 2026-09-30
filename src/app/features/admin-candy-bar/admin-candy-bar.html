@@ -6,6 +6,7 @@
 
         <input formControlName="nombre" placeholder="Nombre">
         <input formControlName="precio" type="number" min="0" placeholder="Precio">
+        <input formControlName="costoPuntos" type="number" min="1" placeholder="Costo en puntos (opcional)">
         <input formControlName="categoria" placeholder="Categoría (ej: bebidas, combos)">
         <input formControlName="imagen" placeholder="URL de imagen">
         <textarea formControlName="descripcion" placeholder="Descripción (opcional)"></textarea>
@@ -35,6 +36,7 @@
             <th>Nombre</th>
             <th>Categoría</th>
             <th>Precio</th>
+            <th>Puntos</th>
             <th>Disponible</th>
             <th>Acciones</th>
         </tr>
@@ -45,6 +47,7 @@
             <td>{{ producto.nombre }}</td>
             <td>{{ producto.categoria }}</td>
             <td>${{ producto.precio }}</td>
+            <td>{{ producto.costoPuntos ?? '—' }}</td>
             <td>{{ producto.disponible ? 'Sí' : 'No' }}</td>
             <td>
                 <button (click)="editar(producto)">Editar</button>

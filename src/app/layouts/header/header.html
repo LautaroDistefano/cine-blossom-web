@@ -27,6 +27,8 @@
 
                 @if (authService.currentUser()) {
                 <li><a routerLink="/mis-peliculas" routerLinkActive="activo">Mis películas</a></li>
+                <li><span class="puntos">{{ puntosService.puntosDisponibles() }} PTS</span></li>
+                
                 }
 
                 @if (authService.currentUser(); as usuario) {

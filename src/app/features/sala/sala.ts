@@ -10,6 +10,7 @@ import { TicketService } from '../../core/services/ticket.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ConfiguracionService } from '../../core/services/configuracion.service';
 import { calcularEdad } from '../../utils/fecha.utils';
+import { PuntosService } from '../../core/services/puntos.service';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class Sala implements OnInit, OnDestroy {
     public authService = inject(AuthService);
     public candyBarService = inject(ProductoCandyBarService);
     private router = inject(Router);
+    private puntosService = inject(PuntosService);
     configuracionService = inject(ConfiguracionService); 
 
     esPrimeraCompra = signal(false);
@@ -164,7 +166,7 @@ export class Sala implements OnInit, OnDestroy {
                 total: this.totalReserva(),
                 codigoQr: resultado.codigoQr
             });
-
+            await this.puntosService.cargarPuntos();
             this.router.navigate(['/home']);
         } else {
             alert('Hubo un error al confirmar la reserva. Probá de nuevo.');

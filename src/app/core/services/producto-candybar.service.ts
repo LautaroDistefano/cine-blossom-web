@@ -4,11 +4,11 @@ import { SupabaseService } from './supabase.service';
 import { ProductoCandyBar } from '../models/producto-candybar.interface';
 
 export interface ProductoRow{
-    // id, nombre, descripcion, precio, categoria, imagen, disponible.
     id: string,
     nombre: string,
     descripcion: string,
     precio: number,
+    costo_puntos: number | null,
     categoria: string,
     imagen: string,
     disponible: boolean 
@@ -57,6 +57,7 @@ export class ProductoCandyBarService {
             nombre: row.nombre,
             descripcion: row.descripcion,
             precio: row.precio,
+            costoPuntos: row.costo_puntos,
             categoria: row.categoria,
             imagen: row.imagen,
             disponible: row.disponible 
@@ -79,6 +80,7 @@ export class ProductoCandyBarService {
             nombre: producto.nombre,
             descripcion: producto.descripcion,
             precio: producto.precio,
+            costo_puntos: producto.costoPuntos ?? null,
             categoria: producto.categoria,
             imagen: producto.imagen,
             disponible: producto.disponible
@@ -98,6 +100,7 @@ export class ProductoCandyBarService {
             nombre: cambios.nombre,
             descripcion: cambios.descripcion,
             precio: cambios.precio,
+            costo_puntos: cambios.costoPuntos ?? null,
             categoria: cambios.categoria,
             imagen: cambios.imagen,
             disponible: cambios.disponible

@@ -18,12 +18,13 @@ export class AdminCandybar {
   error = signal<string | null>(null);
 
   productoForm = this.fb.group({
-    nombre: ['', Validators.required],
-    descripcion: [''],
-    precio: [0, [Validators.required, Validators.min(0)]],
-    categoria: ['', Validators.required],
-    imagen: ['', Validators.required],
-    disponible: [true],
+      nombre: ['', Validators.required],
+      descripcion: [''],
+      precio: [0, [Validators.required, Validators.min(0)]],
+      costoPuntos: [null as number | null, Validators.min(1)],
+      categoria: ['', Validators.required],
+      imagen: ['', Validators.required],
+      disponible: [true],
   });
 
   async onSubmit() {
@@ -37,6 +38,7 @@ export class AdminCandybar {
       nombre: valores.nombre!,
       descripcion: valores.descripcion ?? '',
       precio: Number(valores.precio),
+      costoPuntos: valores.costoPuntos ?? null,
       categoria: valores.categoria!,
       imagen: valores.imagen!,
       disponible: valores.disponible ?? true,
@@ -62,6 +64,7 @@ export class AdminCandybar {
       nombre: producto.nombre,
       descripcion: producto.descripcion,
       precio: producto.precio,
+      costoPuntos: producto.costoPuntos ?? null,
       categoria: producto.categoria,
       imagen: producto.imagen,
       disponible: producto.disponible,
@@ -71,7 +74,7 @@ export class AdminCandybar {
   cancelarEdicion() {
     this.editandoId.set(null);
     this.error.set(null);
-    this.productoForm.reset({ precio: 0, disponible: true });
+    this.productoForm.reset({ precio: 0, costoPuntos: null, disponible: true });
   }
 
   async eliminar(id: string) {

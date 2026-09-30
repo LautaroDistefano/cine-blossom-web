@@ -6,5 +6,6 @@ export interface ProductoCandyBar{
     precio: number,
     categoria: string,
     imagen: string,
-    disponible: boolean 
+    disponible: boolean,
+    costoPuntos?: number | null
 }
