@@ -11,7 +11,7 @@ export class AuthService {
     // Signals para manejar el estado de autenticación
     currentUser = signal<User | null>(null);
     currentSession = signal<Session | null>(null);
-    rolActual = signal<'cliente' | 'admin' | null>(null);
+    rolActual = signal<'cliente' | 'admin' | 'empleado' | null>(null);
     fechaNacimiento = signal<string | null>(null);
 
     constructor() {
@@ -47,7 +47,7 @@ export class AuthService {
             .single();
 
         if (!error && data) {
-            this.rolActual.set(data.rol as 'cliente' | 'admin');
+            this.rolActual.set(data.rol as 'cliente' | 'admin' | 'empleado');
             this.fechaNacimiento.set(data.fecha_nacimiento);
         }
     }

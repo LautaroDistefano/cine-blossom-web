@@ -1,0 +1,59 @@
+<section class="validar">
+    <h2>Validar entrada</h2>
+    <p>Escribí el código de la entrada o del producto y tocá "Validar".</p>
+
+    <div class="formulario">
+        <input
+            #campo
+            type="text"
+            placeholder="Código de la entrada"
+            [value]="codigo()"
+            (input)="codigo.set(campo.value)"
+            (keyup.enter)="validar()"
+        />
+        <button (click)="validar()" [disabled]="validando()">
+            {{ validando() ? 'Validando...' : 'Validar' }}
+        </button>
+    </div>
+
+    @if (resultado(); as res) {
+        @switch (res.estado) {
+            @case ('valida') {
+                <div class="resultado ok">
+                    <h3>Entrada válida, puede pasar</h3>
+                    @if (res.entrada) {
+                        <p>Película: {{ nombrePelicula(res.entrada.funcionId) }}</p>
+                        <p>Horario: {{ horarioFuncion(res.entrada.funcionId) | date:'dd/MM/yyyy HH:mm' }}</p>
+                        <p>Butacas: {{ res.entrada.butacas.join(', ') }}</p>
+                        @if (res.entrada.candyBar.length > 0) {
+                            <p>Candy bar:</p>
+                            <ul>
+                                @for (item of res.entrada.candyBar; track item.nombre) {
+                                    <li>{{ item.cantidad }} x {{ item.nombre }}</li>
+                                }
+                            </ul>
+                        }
+                    }
+                </div>
+            }
+            @case ('ya_usada') {
+                <div class="resultado error">
+                    <h3>Esta entrada ya fue usada</h3>
+                    <p>No se puede volver a validar.</p>
+                </div>
+            }
+            @case ('inexistente') {
+                <div class="resultado error">
+                    <h3>Código inexistente</h3>
+                    <p>Revisá que el código esté bien escrito.</p>
+                </div>
+            }
+            @case ('error') {
+                <div class="resultado error">
+                    <h3>Hubo un error</h3>
+                    <p>Probá de nuevo.</p>
+                </div>
+            }
+        }
+    }
+</section>

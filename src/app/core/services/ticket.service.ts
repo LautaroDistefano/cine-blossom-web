@@ -48,6 +48,12 @@ export class TicketService {
 
         doc.addImage(qrDataUrl, 'PNG', 140, 20, 50, 50);
 
+        doc.addImage(qrDataUrl, 'PNG', 140, 20, 50, 50);
+
+        // Código escrito debajo del QR, para el ingreso manual (RF28)
+        doc.setFontSize(8);
+        doc.text(`Código: ${datos.codigoQr}`, 165, 76, { align: 'center' });
+
         doc.save(`entrada-${datos.codigoQr.slice(0, 8)}.pdf`);
     }
 }

@@ -1,0 +1,37 @@
+.validar {
+    max-width: 480px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.formulario {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.formulario input {
+    flex: 1;
+    padding: 0.6rem;
+}
+
+.formulario button {
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+}
+
+.resultado {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.resultado.ok {
+    background: #d4f5dd;
+    color: #14532d;
+}
+
+.resultado.error {
+    background: #fbd5d5;
+    color: #7f1d1d;
+}

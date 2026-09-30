@@ -93,11 +93,14 @@ export class SalaService {
                 'postgres_changes',
                 { event: 'INSERT', schema: 'public', table: 'entradas', filter: `funcion_id=eq.${funcionId}` },
                 (payload) => {
+                    console.log('Llegó una compra nueva:', payload);
                     const nuevas = payload.new['butacas'] as string[];
                     this.butacasOcupadasSignal.update(actuales => [...actuales, ...nuevas]);
                 }
             )
-            .subscribe();
+            .subscribe((estado) => {
+                console.log('Estado de Realtime:', estado);
+            });
     }
 
     // Deja de escuchar (hay que llamarlo al salir de la pantalla)
