@@ -87,13 +87,13 @@
     <p class="total-reserva">Total: ${{ totalReserva() }}</p>
 
     @if (authService.currentUser() && puntosService.creditosDisponibles() > 0) {
-        <label>
+        <label class="texto-creditos">
             <input type="checkbox" [checked]="usarCreditos()" (change)="usarCreditos.set(!usarCreditos())">
             Usar mis créditos (${{ puntosService.creditosDisponibles() }} disponibles)
         </label>
         @if (usarCreditos()) {
-            <p>Créditos aplicados: −${{ creditosAUsar() }}</p>
-            <p>Total a pagar: ${{ totalAPagar() }}</p>
+            <p class="texto-creditos">Créditos aplicados: −${{ creditosAUsar() }}</p>
+            <p class="texto-creditos">Total a pagar: ${{ totalAPagar() }}</p>
         }
     }
 

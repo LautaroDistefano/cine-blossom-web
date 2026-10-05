@@ -46,12 +46,14 @@ section{
 
 .bloque-butacas {
     display: flex;
-    gap: 4px; /* esto es el espacio chico entre butacas del mismo bloque */
+    gap: 5px; /* esto es el espacio chico entre butacas del mismo bloque */
 }
 
 .bloques-fila {
     display: flex;
     gap: 24px; /* esto es el "pasillo" entre bloques */
+    flex: 1;
+    justify-content: center;
 }
 
 .butaca {
@@ -539,3 +541,8 @@ hr{
 .porcentaje-cupon{
     color: var(--color-accent);;
 }
+
+.texto-creditos{
+    color: var(--color-text)
+}
+

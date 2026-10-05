@@ -30,8 +30,6 @@ export class PuntosService {
     canjes = signal<Canje[]>([]);
     creditosDisponibles = signal(0);
 
-    
-
     constructor() {
         // Cada vez que cambia el usuario (login o logout), se recalculan los puntos
         effect(() => {
@@ -44,6 +42,7 @@ export class PuntosService {
     puntosDisponibles = computed(() => Math.max(0, this.puntosGanados() - this.puntosGastados()));
 
     async cargarPuntos(): Promise<void> {
+        // 1. ¿Quién es el usuario? Si no hay nadie logueado, dejamos todo en cero y salimos.
         const usuarioId = this.authService.currentUser()?.id;
 
         if (!usuarioId) {
@@ -54,6 +53,8 @@ export class PuntosService {
             return;
         }
 
+        // 2. Le pedimos a Supabase las compras de este usuario.
+        //    Una sola consulta sirve para calcular los puntos Y los créditos.
         const { data: entradas, error: errorEntradas } = await this.supabase
             .from('entradas')
             .select('precio_total, creditos_usados, cancelada')
@@ -64,22 +65,28 @@ export class PuntosService {
             return;
         }
 
-        let ganados = 0;     // puntos: pesos pagados en compras no canceladas
-        let recuperado = 0;  // créditos: total de las compras canceladas
-        let usado = 0;       // créditos ya gastados en compras nuevas
+        // 3. Tres acumuladores, que arrancan en cero:
+        let ganados = 0;     // PUNTOS: pesos pagados en compras que NO se cancelaron
+        let recuperado = 0;  // CRÉDITOS: total de las compras que SÍ se cancelaron
+        let usado = 0;       // CRÉDITOS: lo que ya se gastó pagando compras con créditos
 
+        // 4. Recorremos las compras una por una
         for (const e of entradas ?? []) {
-            const total = Number(e.precio_total);
-            const creditos = Number(e.creditos_usados);
-            usado += creditos;
+            const total = Number(e.precio_total);        // total de la compra
+            const creditos = Number(e.creditos_usados);  // cuánto se pagó con créditos
+            usado += creditos;                           // esto vale para TODAS las compras
 
             if (e.cancelada) {
+                // Compra cancelada: su total se devuelve como crédito
                 recuperado += total;
             } else {
-                ganados += Math.floor(total - creditos);
+                // Compra activa: suma puntos, pero solo por lo que se pagó en pesos
+                // (al total le sacamos lo que se pagó con créditos)
+                ganados += Math.floor(total - creditos); // Redondea al entero menor ej: (5.9 -> 5)
             }
         }
 
+        // 5. Ahora pedimos los canjes del usuario (los puntos que ya gastó)
         const { data: canjes, error: errorCanjes } = await this.supabase
             .from('canjes')
             .select('*')
@@ -91,6 +98,7 @@ export class PuntosService {
             return;
         }
 
+        // 6. Convertimos las filas de la base de datos al formato que usa la app
         const lista = (canjes as CanjeRow[]).map(row => ({
             id: row.id,
             descripcion: row.descripcion,
@@ -98,10 +106,12 @@ export class PuntosService {
             fecha: row.created_at
         }));
 
-        this.puntosGanados.set(ganados);
-        this.creditosDisponibles.set(recuperado - usado);
-        this.canjes.set(lista);
-        this.puntosGastados.set(lista.reduce((suma, c) => suma + c.puntosGastados, 0));
+        // 7. Guardamos los resultados en los signals, y la pantalla se actualiza sola
+        this.puntosGanados.set(ganados);                 // puntos ganados
+        this.creditosDisponibles.set(recuperado - usado); // CRÉDITOS = recuperado - usado
+        this.canjes.set(lista);                          // historial de canjes
+        this.puntosGastados.set(lista.reduce((suma, c) => suma + c.puntosGastados, 0)); // puntos gastados
+        // Los puntos disponibles (ganados - gastados) los calcula otro signal, puntosDisponibles
     }
 
     // Registra un canje. Devuelve false si no alcanzan los puntos o si hubo un error.

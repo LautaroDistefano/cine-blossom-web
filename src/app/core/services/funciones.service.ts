@@ -113,15 +113,15 @@ export class FuncionesService {
     }
 
     // Verifica si programar una función en salaId a horarioISO (con esa duración) choca
-    // con alguna función existente en la misma sala, respetando la diferencia de los 30 minutos.
-    // funcionIdExcluir sirve para que, al editar una función, no choque "contra sí misma".
-    hayConflictoDeHorario(
-        salaId: number,
-        horarioISO: string,
-        duracionMinutos: number,
-        duracionesPorPelicula: Map<string, number>,
-        funcionIdExcluir?: string
-    ): boolean {
+    // con alguna función existente, respetando la diferencia de los 30 minutos.
+    hayConflictoDeHorario(salaId: number, horarioISO: string, duracionMinutos: number, duracionesPorPelicula: Map<string, number>, funcionIdExcluir?: string): boolean {
+        /* 
+            SalaId: El id de nuestra sala a evaluar
+            HorarioISO: Horario de la nueva funcion (lo convertiremos a milisegundos para poder trabajar con ellos)
+            duracionMinutos: Lo recibimos de afuera, es la duracion en minutos de la funcion que queremos programar
+            duracionesPorPelicula: Duracion de esa funcion existente, usamos MAP porque cada funcion tiene distinta duracion
+            funcionIdExcluir
+        */
         const inicioNuevo = new Date(horarioISO).getTime();
         const finNuevoConBuffer = inicioNuevo + (duracionMinutos + 30) * 60000;
 
@@ -140,11 +140,7 @@ export class FuncionesService {
     }
 
     asignarSalaLibre(
-        horarioISO: string,
-        duracionMinutos: number,
-        duracionesPorPelicula: Map<string, number>,
-        funcionIdExcluir?: string
-    ): number | null {
+        horarioISO: string, duracionMinutos: number, duracionesPorPelicula: Map<string, number>, funcionIdExcluir?: string): number | null {
         // Probamos las salas de la 1 a la 5, en orden
         for (let sala = 1; sala <= CANTIDAD_SALAS; sala++) {
             const hayConflicto = this.hayConflictoDeHorario(
