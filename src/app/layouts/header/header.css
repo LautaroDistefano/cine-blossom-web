@@ -75,3 +75,21 @@ hr{
     background-color: var(--color-accent);
     color: var(--color-bg);
 }
+
+.encabezado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-left: 40px;
+}
+
+.contenedor-logo img {
+    display: block;
+    height: 42px;
+    width: auto;
+}
+
+.encabezado h1 {
+    padding-left: 0;
+    white-space: nowrap;
+}

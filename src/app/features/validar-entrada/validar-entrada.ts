@@ -29,6 +29,7 @@ export class ValidarEntrada implements OnDestroy {
         if (!this.codigo().trim()) return;
 
         this.validando.set(true);
+        this.resultado.set(null)
         const respuesta = await this.entradaService.validarCodigo(this.codigo());
         this.resultado.set(respuesta);
         this.validando.set(false);
