@@ -42,7 +42,7 @@ export class PuntosService {
     puntosDisponibles = computed(() => Math.max(0, this.puntosGanados() - this.puntosGastados()));
 
     async cargarPuntos(): Promise<void> {
-        // 1. ¿Quién es el usuario? Si no hay nadie logueado, dejamos todo en cero y salimos.
+        // 1. Tenemos usuario?, si no hay entonces dejamos todo en cero y salimos
         const usuarioId = this.authService.currentUser()?.id;
 
         if (!usuarioId) {
@@ -53,8 +53,8 @@ export class PuntosService {
             return;
         }
 
-        // 2. Le pedimos a Supabase las compras de este usuario.
-        //    Una sola consulta sirve para calcular los puntos Y los créditos.
+        // 2. Realizamos una consulta a supabase para traernos las compras de este usuario.
+        // Una sola consulta sirve para calcular los puntos Y los créditos.
         const { data: entradas, error: errorEntradas } = await this.supabase
             .from('entradas')
             .select('precio_total, creditos_usados, cancelada')

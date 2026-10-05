@@ -14,7 +14,12 @@
         <button (click)="validar()" [disabled]="validando()">
             {{ validando() ? 'Validando...' : 'Validar' }}
         </button>
+        <button type="button" class="boton-camara" (click)="camaraActiva() ? detenerCamara() : activarCamara()">
+            {{ camaraActiva() ? 'Cerrar cámara' : 'Escanear con cámara' }}
+        </button>
+        <div id="lector-qr" [hidden]="!camaraActiva()"></div>
     </div>
+
 
     @if (resultado(); as res) {
         @switch (res.estado) {
