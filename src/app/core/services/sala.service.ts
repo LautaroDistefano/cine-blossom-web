@@ -84,24 +84,62 @@ export class SalaService {
         });
     }
 
-    // Se queda escuchando: cada vez que alguien compra para esta función, agrega sus butacas a las ocupadas
+    // Se queda escuchando los cambios de la tabla "entradas" para una función en particular.
+    // Lo usa la pantalla de la sala para que las butacas se actualicen sin recargar.
     escucharButacas(funcionId: string) {
+        // 1. Si ya había una conexión abierta (por ejemplo de otra función), la cerramos primero
         this.dejarDeEscuchar();
 
+        // 2. Creamos un "canal": una conexión por WebSocket con Supabase.
+        //    Le ponemos un nombre único por función para no mezclar funciones distintas.
         this.canal = this.supabase
             .channel(`butacas-${funcionId}`)
+
+            // 3. PRIMER AVISO: alguien confirmó una compra (se INSERTA una fila nueva en "entradas")
             .on(
                 'postgres_changes',
-                { event: 'UPDATE', schema: 'public', table: 'entradas', filter: `funcion_id=eq.${funcionId}` },
+                {
+                    event: 'INSERT',// solo filas nuevas
+                    schema: 'public',
+                    table: 'entradas',
+                    filter: `funcion_id=eq.${funcionId}`// solo las de ESTA función
+                },
                 (payload) => {
-                    // Solo nos interesan las cancelaciones (validar un QR también es un UPDATE)
+                    // payload.new es la fila que se acaba de crear
+                    const nuevas = payload.new['butacas'] as string[];
+
+                    // Sumamos esas butacas a las ocupadas. Como es un signal,
+                    // el mapa de la sala se redibuja solo.
+                    this.butacasOcupadasSignal.update(actuales => [...actuales, ...nuevas]);
+                }
+            )
+
+            // 4. SEGUNDO AVISO: se MODIFICÓ una fila de "entradas"
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE', // solo modificaciones
+                    schema: 'public',
+                    table: 'entradas',
+                    filter: `funcion_id=eq.${funcionId}`
+                },
+                (payload) => {
+                    // Una fila también se modifica al validar el QR (campo "validada"),
+                    // y eso no libera nada. Solo nos interesan las cancelaciones.
                     if (payload.new['cancelada']) {
                         const liberadas = payload.new['butacas'] as string[];
-                        this.butacasOcupadasSignal.update(actuales => actuales.filter(b => !liberadas.includes(b)));
+
+                        // Sacamos esas butacas de las ocupadas: vuelven a estar libres
+                        this.butacasOcupadasSignal.update(actuales =>
+                            actuales.filter(b => !liberadas.includes(b))
+                        );
                     }
                 }
             )
+
+            // 5. Abrimos la conexión. Sin este paso, no se escucha nada.
             .subscribe((estado) => {
+                // Para ver si conectó bien: tiene que decir SUBSCRIBED
                 console.log('Estado de Realtime:', estado);
             });
     }
