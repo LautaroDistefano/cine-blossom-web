@@ -72,17 +72,17 @@ export class PuntosService {
 
         // 4. Recorremos las compras una por una
         for (const e of entradas ?? []) {
-            const total = Number(e.precio_total);        // total de la compra
+            const totalPrecio = Number(e.precio_total);        // total de la compra
             const creditos = Number(e.creditos_usados);  // cuánto se pagó con créditos
             usado += creditos;                           // esto vale para TODAS las compras
 
             if (e.cancelada) {
                 // Compra cancelada: su total se devuelve como crédito
-                recuperado += total;
+                recuperado += totalPrecio;
             } else {
                 // Compra activa: suma puntos, pero solo por lo que se pagó en pesos
                 // (al total le sacamos lo que se pagó con créditos)
-                ganados += Math.floor(total - creditos); // Redondea al entero menor ej: (5.9 -> 5)
+                ganados += Math.floor(totalPrecio - creditos); // Redondea al entero menor ej: (5.9 -> 5)
             }
         }
 
