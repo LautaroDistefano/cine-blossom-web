@@ -5,6 +5,7 @@ import { Html5Qrcode } from 'html5-qrcode';
 import { EntradaService, ResultadoValidacion } from '../../core/services/entrada.service';
 import { FuncionesService } from '../../core/services/funciones.service';
 import { MovieService } from '../../core/services/movie.service';
+import { LogService } from '../../core/services/log.service';
 
 @Component({
     selector: 'app-validar-entrada',
@@ -16,6 +17,7 @@ export class ValidarEntrada implements OnDestroy {
     private entradaService = inject(EntradaService);
     private funcionesService = inject(FuncionesService);
     private movieService = inject(MovieService);
+    private logService = inject(LogService)
 
     codigo = signal('');
     validando = signal(false);
@@ -25,14 +27,27 @@ export class ValidarEntrada implements OnDestroy {
     private escaner: Html5Qrcode | null = null;
 
     async validar() {
-        // Si no escribió nada, no hacemos nada
-        if (!this.codigo().trim()) return;
+        if (this.validando()) return;
+
+        const codigo = this.codigo().trim();
+        if (!codigo) return;
 
         this.validando.set(true);
-        this.resultado.set(null)
-        const respuesta = await this.entradaService.validarCodigo(this.codigo());
+        this.resultado.set(null);
+
+        const respuesta = await this.entradaService.validarCodigo(codigo);
         this.resultado.set(respuesta);
         this.validando.set(false);
+
+        // Dejamos registro de cada validación y de su resultado
+        const textos: Record<ResultadoValidacion['estado'], string> = {
+            valida: 'válida',
+            ya_usada: 'ya usada',
+            inexistente: 'código inexistente',
+            cancelada: 'entrada cancelada',
+            error: 'error'
+        };
+        await this.logService.registrar('Validación de QR', `Código ${codigo}: ${textos[respuesta.estado]}`);
 
         // Si salió bien, limpiamos el campo para el próximo código
         if (respuesta.estado === 'valida') {

@@ -4,6 +4,7 @@ import { EntradaService, Compra } from '../../core/services/entrada.service';
 import { FuncionesService } from '../../core/services/funciones.service';
 import { MovieService } from '../../core/services/movie.service';
 import { PuntosService } from '../../core/services/puntos.service';
+import { LogService } from '../../core/services/log.service';
 
 @Component({
     imports: [DatePipe],
@@ -15,6 +16,7 @@ export class MisCompras implements OnInit {
     private entradaService = inject(EntradaService);
     private funcionesService = inject(FuncionesService);
     private movieService = inject(MovieService);
+    private logService = inject(LogService)
     puntosService = inject(PuntosService);
 
     compras = signal<Compra[]>([]);
@@ -70,6 +72,11 @@ export class MisCompras implements OnInit {
             alert('No se pudo cancelar la compra. Probá de nuevo.');
             return;
         }
+
+        await this.logService.registrar(
+            'Cancelación de compra',
+            `${this.nombrePelicula(compra.funcionId)} - Butacas ${compra.butacas.join(', ')} - $${compra.precioTotal} pasaron a crédito`
+        );
 
         // Actualiza los créditos y los puntos que se ven en pantalla
         await this.puntosService.cargarPuntos();

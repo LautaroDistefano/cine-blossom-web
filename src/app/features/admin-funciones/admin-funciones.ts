@@ -5,6 +5,7 @@ import { FuncionesService } from '../../core/services/funciones.service';
 import { MovieService } from '../../core/services/movie.service';
 import { Funcion } from '../../core/models/funcion.interface';
 import { DatePipe } from '@angular/common';
+import { LogService } from '../../core/services/log.service';
 
 @Component({
   selector: 'app-admin-funciones',
@@ -17,6 +18,7 @@ export class AdminFunciones {
   private fb = inject(FormBuilder);
   funcionesService = inject(FuncionesService);
   movieService = inject(MovieService);
+  private logService = inject(LogService);
 
   editandoId = signal<string | null>(null);
   guardando = signal(false);
@@ -88,6 +90,10 @@ export class AdminFunciones {
     this.guardando.set(false);
 
     if (exito) {
+      await this.logService.registrar(
+        idEditando ? 'Función modificada' : 'Función creada',
+        `${pelicula.nombre} - ${new Date(horarioISO).toLocaleString('es-AR')} - Sala ${salaId}`
+      );
       this.cancelarEdicion();
     } else {
       this.error.set('Hubo un error al guardar. Probá de nuevo.');
@@ -113,7 +119,17 @@ export class AdminFunciones {
   async eliminar(id: string) {
     const confirmar = confirm('¿Seguro que querés eliminar esta función?');
     if (!confirmar) return;
-    await this.funcionesService.eliminarFuncion(id);
+
+    // La buscamos antes de borrarla, para poder guardar sus datos en el log
+    const funcion = this.funcionesService.funciones().find(f => f.id === id);
+    const ok = await this.funcionesService.eliminarFuncion(id);
+
+    if (ok && funcion) {
+      await this.logService.registrar(
+        'Función eliminada',
+        `${this.nombrePelicula(funcion.peliculaId)} - ${new Date(funcion.horario).toLocaleString('es-AR')} - Sala ${funcion.salaId}`
+      );
+    }
   }
 
   nombrePelicula(peliculaId: string): string {

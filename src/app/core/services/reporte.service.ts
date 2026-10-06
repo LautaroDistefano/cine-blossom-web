@@ -25,13 +25,13 @@ export class ReporteService {
 
     // desde y hasta llegan como 'YYYY-MM-DD'. Devuelve null si hubo un error.
     async cargarVentas(desde: string, hasta: string): Promise<Venta[] | null> {
-        const inicio = new Date(`${desde}T00:00:00`).toISOString();
+        const inicio = new Date(`${desde}T00:00:00`).toISOString(); //Ej: new Date("2026-10-01T00:00:00")
         const fin = new Date(`${hasta}T23:59:59.999`).toISOString();
 
         const { data, error } = await this.supabase
             .from('entradas')
             .select('id, funcion_id, butacas, candy_bar, precio_total, created_at')
-            .eq('cancelada', false)      // las canceladas no cuentan como facturación
+            .eq('cancelada', false) // las canceladas no cuentan como facturacion
             .gte('created_at', inicio)
             .lte('created_at', fin)
             .order('created_at');

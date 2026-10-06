@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductoCandyBarService } from '../../core/services/producto-candybar.service';
 import { ProductoCandyBar } from '../../core/models/producto-candybar.interface';
+import { LogService } from '../../core/services/log.service';
 
 @Component({
   imports: [ReactiveFormsModule],
@@ -12,6 +13,7 @@ import { ProductoCandyBar } from '../../core/models/producto-candybar.interface'
 export class AdminCandybar {
   private fb = inject(FormBuilder);
   candyBarService = inject(ProductoCandyBarService);
+  private logService = inject(LogService)
 
   editandoId = signal<string | null>(null);
   guardando = signal(false);
@@ -47,6 +49,7 @@ export class AdminCandybar {
     };
 
     const id = this.editandoId();
+    const anterior = id ? this.candyBarService.productos().find(p => p.id === id) : undefined;
     const exito = id
       ? await this.candyBarService.editarProducto(id, producto)
       : await this.candyBarService.agregarProducto(producto);
@@ -54,6 +57,13 @@ export class AdminCandybar {
     this.guardando.set(false);
 
     if (exito) {
+      if (!id) {
+        await this.logService.registrar('Producto creado', `${producto.nombre}: $${producto.precio}`);
+      } else if (anterior && anterior.precio !== producto.precio) {
+        await this.logService.registrar('Modificación de precio', `${producto.nombre}: $${anterior.precio} → $${producto.precio}`);
+      } else {
+        await this.logService.registrar('Producto modificado', producto.nombre);
+      }
       this.cancelarEdicion();
     } else {
       this.error.set('Hubo un error al guardar. Probá de nuevo.');
@@ -82,7 +92,13 @@ export class AdminCandybar {
   async eliminar(id: string) {
     const confirmar = confirm('¿Seguro que querés eliminar este producto?');
     if (!confirmar) return;
-    await this.candyBarService.eliminarProducto(id);
+
+    const producto = this.candyBarService.productos().find(p => p.id === id);
+    const ok = await this.candyBarService.eliminarProducto(id);
+
+    if (ok && producto) {
+      await this.logService.registrar('Producto eliminado', producto.nombre);
+    }
   }
 
   async onArchivoSeleccionado(event: Event) {

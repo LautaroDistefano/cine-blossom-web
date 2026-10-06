@@ -5,9 +5,9 @@ import { ReporteService, Venta } from '../../core/services/reporte.service';
 import { FuncionesService } from '../../core/services/funciones.service';
 import { MovieService } from '../../core/services/movie.service';
 
-// Chart.js necesita que le avisemos qué tipos de gráfico vamos a usar
+// La libreria de chart.js necesita, de forma explicita, una aclaracion de que graficos vamos a usar
 Chart.register(...registerables);
-Chart.defaults.color = '#f2e9d8';
+Chart.defaults.color = '#f2e9d8'; //Refiere a los numeros del eje X e Y
 Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
 
 interface VentaDia {
@@ -62,8 +62,8 @@ export class AdminReportes implements OnInit, OnDestroy {
     totalEntradas = computed(() => this.ventas().reduce((suma, v) => suma + v.butacas.length, 0));
     totalFacturado = computed(() => this.ventas().reduce((suma, v) => suma + v.precioTotal, 0));
 
-    // --- NUEVO: datos para los gráficos ---
-
+    
+    // Datos de nuestros graficos
     // Película -> entradas vendidas (las 5 primeras)
     peliculasMasVistas = computed(() => {
         const funciones = this.funcionesService.funciones();
@@ -163,7 +163,7 @@ export class AdminReportes implements OnInit, OnDestroy {
         this.ventas.set(ventas);
     }
 
-    // NUEVO: botones "Última semana" y "Último mes"
+    // Nuestros botones de ultima semana y ultimo mes se evaluan aca
     async ultimosDias(dias: number) {
         // Se resta (dias - 1) porque el rango incluye el día de hoy
         this.desde.set(this.aInputFecha(new Date(Date.now() - (dias - 1) * 24 * 60 * 60 * 1000)));
@@ -171,12 +171,12 @@ export class AdminReportes implements OnInit, OnDestroy {
         await this.generar();
     }
 
-    // NUEVO: ordena de mayor a menor y se queda con los 5 primeros
+    // Ordenamos de mayor a menor y despues hacemos un slice para quedarnos con los primeros 5
     private topCinco(conteo: Map<string, number>): [string, number][] {
         return [...conteo.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
     }
 
-    // NUEVO: dibuja un gráfico de barras en un canvas
+    // Grafico de barras
     private dibujar(clave: string, canvas: HTMLCanvasElement, etiquetas: string[], datos: number[], titulo: string) {
         // Si ya había un gráfico en ese canvas, lo borramos primero
         this.graficos.get(clave)?.destroy();

@@ -1,0 +1,46 @@
+<section class="admin-contenedor">
+    <h2>Registro de actividad</h2>
+
+    <div class="filtros">
+        <label>
+            Filtrar por acción
+            <select #selector (change)="filtro.set(selector.value)">
+                <option value="todas">Todas</option>
+                @for (accion of acciones(); track accion) {
+                    <option [value]="accion">{{ accion }}</option>
+                }
+            </select>
+        </label>
+    </div>
+
+    @if (error()) {
+        <p class="error-msg">{{ error() }}</p>
+    }
+
+    @if (cargando()) {
+        <p>Cargando...</p>
+    } @else if (logsFiltrados().length === 0) {
+        <p>No hay registros.</p>
+    } @else {
+        <table class="tabla-peliculas">
+            <thead>
+                <tr>
+                    <th>Fecha y hora</th>
+                    <th>Usuario</th>
+                    <th>Acción</th>
+                    <th>Detalle</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (log of logsFiltrados(); track log.id) {
+                    <tr>
+                        <td>{{ log.fecha | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                        <td>{{ log.usuarioEmail }}</td>
+                        <td>{{ log.accion }}</td>
+                        <td>{{ log.detalle }}</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</section>
