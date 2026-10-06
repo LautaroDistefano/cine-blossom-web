@@ -93,3 +93,8 @@ hr{
     padding-left: 0;
     white-space: nowrap;
 }
+
+.titulo-contenedor a{
+    list-style: none;
+    text-decoration: none;
+}
