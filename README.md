@@ -8,7 +8,6 @@ Plataforma web para la venta de entradas y la gestión de un cine: compra online
 Proyecto de parcial de Programación. Autor: Lautaro Torres Distefano.
 
 ## Tecnologías
-...
 
 - Angular (standalone components y signals)
 - Supabase: base de datos, autenticación, Storage y Realtime
