@@ -1,59 +1,60 @@
-# ParcialProgramacionLautaroTorresDistefano
+# Cine Blossom
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.5.
+Plataforma web para la venta de entradas y la gestión de un cine: compra online con selección de butacas, candy bar, puntos, cupones, validación de entradas y reportes para el administrador.
 
-## Development server
+**Demo:** [Cine Blossom](https://cine-blossom-web.vercel.app/home)
+**Repositorio:** https://github.com/LautaroDistefano/cine-blossom-web
 
-To start a local development server, run:
+Proyecto de parcial de Programación. Autor: Lautaro Torres Distefano.
+
+## Tecnologías
+
+- Angular (standalone components y signals)
+- Supabase: base de datos, autenticación, Storage y Realtime
+- Chart.js, jsPDF, qrcode y html5-qrcode
+- Despliegue en Vercel
+
+## Funcionalidades
+
+**Clientes**
+- Compra de entradas con mapa de butacas en tiempo real, incluso sin registro
+- Entrada en PDF con código QR y código escrito
+- Candy bar con combos y productos canjeables con puntos
+- Un punto por cada peso pagado
+- Cupones de descuento, incluido uno para mayores de 50 años
+- Cancelación hasta 2 horas antes de la función, con el monto como crédito
+- Reseñas y calificaciones de películas
+
+**Empleado**
+- Validación de entradas por cámara o ingreso manual del código
+
+**Administrador**
+- Gestión de películas, funciones y productos del candy bar
+- Asignación automática de sala, sin superposiciones y con 30 minutos de margen
+- Reporte de facturación con gráficos de ventas
+- Registro de actividad
+
+## Roles
+
+`cliente`, `admin` y `empleado`. El rol se guarda en la columna `rol` de la tabla `perfiles`.
+
+## Instalación
 
 ```bash
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La aplicación queda disponible en `http://localhost:4200/`.
 
-## Code scaffolding
+Antes de iniciar, completá la URL y la clave pública de tu proyecto de Supabase en `src/app/environments/environments.ts`.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Pruebas
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+## Pendiente
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Exportar el reporte de facturación a PDF y Excel

@@ -37,12 +37,12 @@ export class AdminReportes implements OnInit, OnDestroy {
     error = signal<string | null>(null);
 
     // Agrupa las ventas por día (ordenadas desde la mas vieja a la mas actual)
-    ventasPorDia = computed(() => {
-        const dias = new Map<string, VentaDia>();
+    ventasPorDia = computed(() => { 
+        const dias = new Map<string, VentaDia>(); //Clave: 2026-10-05, valor VentaDia
 
         for (const v of this.ventas()) {
             const clave = this.aInputFecha(v.fecha);
-            const dia = dias.get(clave) ?? { //Ej clave: 2026-10-05
+            const dia = dias.get(clave) ?? { 
                 fecha: new Date(v.fecha.getFullYear(), v.fecha.getMonth(), v.fecha.getDate()),
                 compras: 0,
                 entradas: 0,
@@ -178,6 +178,12 @@ export class AdminReportes implements OnInit, OnDestroy {
 
     // Grafico de barras
     private dibujar(clave: string, canvas: HTMLCanvasElement, etiquetas: string[], datos: number[], titulo: string) {
+    // clave:     nombre para encontrar este gráfico después ('dias', 'peliculas' o 'productos')
+    // canvas:    el elemento <canvas> del HTML donde se va a dibujar
+    // etiquetas: los textos del eje horizontal (días, nombres de películas, productos)
+    // datos:     los números que definen la altura de cada barra
+    // titulo:    cómo se llama la serie de datos (aparece al pasar el mouse por una barra)
+
         // Si ya había un gráfico en ese canvas, lo borramos primero
         this.graficos.get(clave)?.destroy();
 
@@ -185,7 +191,9 @@ export class AdminReportes implements OnInit, OnDestroy {
             type: 'bar',
             data: {
                 labels: etiquetas,
-                datasets: [{ label: titulo, data: datos, backgroundColor: '#c9a227' }]
+                datasets: [{ label: titulo, 
+                    data: datos, 
+                    backgroundColor: '#c9a227' }]
             },
             options: {
                 responsive: true,
