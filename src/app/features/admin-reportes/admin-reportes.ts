@@ -36,13 +36,13 @@ export class AdminReportes implements OnInit, OnDestroy {
     cargando = signal(false);
     error = signal<string | null>(null);
 
-    // Agrupa las ventas por día (llegan ordenadas de la más vieja a la más nueva)
+    // Agrupa las ventas por día (ordenadas desde la mas vieja a la mas actual)
     ventasPorDia = computed(() => {
         const dias = new Map<string, VentaDia>();
 
         for (const v of this.ventas()) {
             const clave = this.aInputFecha(v.fecha);
-            const dia = dias.get(clave) ?? {
+            const dia = dias.get(clave) ?? { //Ej clave: 2026-10-05
                 fecha: new Date(v.fecha.getFullYear(), v.fecha.getMonth(), v.fecha.getDate()),
                 compras: 0,
                 entradas: 0,
@@ -198,7 +198,15 @@ export class AdminReportes implements OnInit, OnDestroy {
 
     // Convierte una fecha a 'YYYY-MM-DD' en hora local
     private aInputFecha(fecha: Date): string {
+
+        // Función auxiliar: convierte un número en string de 2 dígitos,
+        // rellenando con un 0 a la izquierda si hace falta.
+        // pad(5)  -> "05"
+        // pad(12) -> "12"
         const pad = (n: number) => String(n).padStart(2, '0');
-        return `${fecha.getFullYear()}-${pad(fecha.getMonth() + 1)}-${pad(fecha.getDate())}`;
+
+        return `${fecha.getFullYear()}` // Año con cuatro digitos
+            + `-${pad(fecha.getMonth() + 1)}`// getMonth va de 0 a 11, por eso usamos +1
+            + `-${pad(fecha.getDate())}`;// Dia del mes
     }
 }
