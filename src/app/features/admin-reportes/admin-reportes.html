@@ -1,0 +1,69 @@
+<section class="admin-contenedor">
+    <h2>Reporte de facturación</h2>
+
+    <div class="filtros">
+        <label>
+            Desde
+            <input #campoDesde type="date" [value]="desde()" (change)="desde.set(campoDesde.value)">
+        </label>
+        <label>
+            Hasta
+            <input #campoHasta type="date" [value]="hasta()" (change)="hasta.set(campoHasta.value)">
+        </label>
+        <button type="button" (click)="generar()" [disabled]="cargando()">
+            {{ cargando() ? 'Cargando...' : 'Generar reporte' }}
+        </button>
+    </div>
+
+    @if (error()) {
+        <p class="error-msg">{{ error() }}</p>
+    }
+
+    <div class="resumen-reporte">
+        <div class="dato-reporte">
+            <span>Facturado</span>
+            <strong>${{ totalFacturado() }}</strong>
+        </div>
+        <div class="dato-reporte">
+            <span>Entradas vendidas</span>
+            <strong>{{ totalEntradas() }}</strong>
+        </div>
+        <div class="dato-reporte">
+            <span>Compras</span>
+            <strong>{{ totalCompras() }}</strong>
+        </div>
+    </div>
+
+    @if (ventasPorDia().length === 0 && !cargando()) {
+        <p>No hay ventas en ese período.</p>
+    } @else {
+        <table class="tabla-peliculas">
+            <thead>
+                <tr>
+                    <th>Día</th>
+                    <th>Compras</th>
+                    <th>Entradas</th>
+                    <th>Facturado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (dia of ventasPorDia(); track dia.fecha.getTime()) {
+                    <tr>
+                        <td>{{ dia.fecha | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ dia.compras }}</td>
+                        <td>{{ dia.entradas }}</td>
+                        <td>${{ dia.facturado }}</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Total</td>
+                    <td>{{ totalCompras() }}</td>
+                    <td>{{ totalEntradas() }}</td>
+                    <td>${{ totalFacturado() }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+</section>

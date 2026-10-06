@@ -1,0 +1,97 @@
+.filtros {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.filtros label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.filtros input {
+    padding: 8px 4px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--color-text-muted);
+    color: var(--color-text);
+    font-family: inherit;
+    color-scheme: dark; /* para que el ícono del calendario se vea */
+    outline: none;
+}
+
+.filtros input:focus {
+    border-bottom-color: var(--color-accent);
+}
+
+.filtros button {
+    padding: 10px 22px;
+    background-color: var(--color-accent);
+    border: none;
+    color: var(--color-bg);
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.filtros button:disabled {
+    background-color: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.error-msg {
+    color: #e08a8a;
+    background-color: rgba(224, 138, 138, 0.1);
+    border: 1px solid rgba(224, 138, 138, 0.3);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.resumen-reporte {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.dato-reporte {
+    flex: 1;
+    min-width: 160px;
+    background-color: var(--color-surface);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: center;
+}
+
+.dato-reporte span {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+}
+
+.dato-reporte strong {
+    color: var(--color-accent);
+    font-size: 1.4rem;
+    font-family: var(--font-display, 'Playfair Display', serif);
+}
+
+.tabla-peliculas td:last-child {
+    display: table-cell;
+}
+
+tfoot td {
+    padding: 12px 16px;
+    font-weight: 600;
+    color: var(--color-accent);
+    border-top: 1px solid var(--color-accent);
+}

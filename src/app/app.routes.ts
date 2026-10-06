@@ -14,6 +14,7 @@ import { AdminCandybar } from './features/admin-candy-bar/admin-candy-bar';
 import { ValidarEntrada } from './features/validar-entrada/validar-entrada';
 import { empleadoGuard } from './core/guards/empleado-guard';
 import { MisCompras } from './features/mis-compras/mis-compras';
+import { AdminReportes } from './features/admin-reportes/admin-reportes';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -33,7 +34,8 @@ export const routes: Routes = [
             { path: '', redirectTo: 'peliculas', pathMatch: 'full' },
             { path: 'peliculas', component: AdminPeliculas },
             { path: 'funciones', component: AdminFunciones },
-            { path: 'candybar', component: AdminCandybar }
+            { path: 'candybar', component: AdminCandybar },
+            { path: 'reportes', component: AdminReportes }
         ]
     },
     { path: '**', redirectTo: 'home' }
