@@ -1,8 +1,28 @@
+.admin-contenedor {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: var(--color-text);
+}
+
+.admin-contenedor h2 {
+    font-family: var(--font-display, 'Playfair Display', serif);
+    color: var(--color-accent);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* --- Filtros (misma tarjeta que los formularios del admin) --- */
+
 .filtros {
     display: flex;
     align-items: flex-end;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
+    background-color: var(--color-surface);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    border-radius: 12px;
+    padding: 1.75rem;
     margin-bottom: 1.5rem;
 }
 
@@ -11,38 +31,59 @@
     flex-direction: column;
     gap: 4px;
     color: var(--color-text-muted);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 .filtros input {
-    padding: 8px 4px;
-    background: transparent;
+    padding: 10px 4px;
+    background-color: transparent;
     border: none;
     border-bottom: 1px solid var(--color-text-muted);
     color: var(--color-text);
+    font-size: 0.9rem;
     font-family: inherit;
     color-scheme: dark; /* para que el ícono del calendario se vea */
     outline: none;
+    transition: border-color 0.25s ease;
 }
 
 .filtros input:focus {
-    border-bottom-color: var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
 }
 
 .filtros button {
     padding: 10px 22px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
     background-color: var(--color-accent);
     border: none;
     color: var(--color-bg);
-    border-radius: 6px;
     font-weight: 600;
-    cursor: pointer;
+}
+
+.filtros button:hover:not(:disabled) {
+    opacity: 0.85;
 }
 
 .filtros button:disabled {
-    background-color: var(--color-surface);
-    color: var(--color-text-muted);
+    background-color: var(--color-text-muted);
     cursor: not-allowed;
+}
+
+.filtros .boton-secundario {
+    background-color: transparent;
+    border: 1px solid var(--color-text-muted);
+    color: var(--color-text-muted);
+    font-weight: normal;
+}
+
+.filtros .boton-secundario:hover {
+    opacity: 1;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
 }
 
 .error-msg {
@@ -52,8 +93,10 @@
     padding: 10px 12px;
     border-radius: 6px;
     font-size: 0.85rem;
-    margin-bottom: 1rem;
+    margin: 0 0 1.5rem;
 }
+
+/* --- Resumen --- */
 
 .resumen-reporte {
     display: flex;
@@ -67,8 +110,8 @@
     min-width: 160px;
     background-color: var(--color-surface);
     border: 1px solid rgba(201, 162, 39, 0.2);
-    border-radius: 10px;
-    padding: 14px 18px;
+    border-radius: 12px;
+    padding: 1.25rem;
     text-align: center;
 }
 
@@ -76,51 +119,31 @@
     display: block;
     color: var(--color-text-muted);
     font-size: 0.8rem;
-    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
 }
 
 .dato-reporte strong {
     color: var(--color-accent);
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-family: var(--font-display, 'Playfair Display', serif);
 }
 
-.tabla-peliculas td:last-child {
-    display: table-cell;
-}
-
-tfoot td {
-    padding: 12px 16px;
-    font-weight: 600;
-    color: var(--color-accent);
-    border-top: 1px solid var(--color-accent);
-}
-
-/* GRAFICOS */
-.filtros .boton-secundario {
-    background: transparent;
-    border: 1px solid var(--color-text-muted);
-    color: var(--color-text-muted);
-    font-weight: normal;
-}
-
-.filtros .boton-secundario:hover {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-}
+/* --- Gráficos --- */
 
 .graficos {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 .grafico-caja {
     background-color: var(--color-surface);
     border: 1px solid rgba(201, 162, 39, 0.2);
-    border-radius: 10px;
-    padding: 14px 18px;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
 }
 
 /* El primer gráfico ocupa todo el ancho */
@@ -131,11 +154,59 @@ tfoot td {
 .grafico-caja h3 {
     font-family: var(--font-display, 'Playfair Display', serif);
     color: var(--color-text);
-    font-size: 1rem;
-    margin-bottom: 10px;
+    font-size: 1.1rem;
+    margin: 0 0 0.75rem;
 }
 
 .grafico {
     position: relative;
     height: 260px;
+}
+
+/* --- Tabla --- */
+
+.tabla-peliculas {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--color-surface);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.tabla-peliculas thead {
+    background-color: rgba(201, 162, 39, 0.1);
+}
+
+.tabla-peliculas th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+.tabla-peliculas td {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tabla-peliculas tbody tr:hover {
+    background-color: rgba(201, 162, 39, 0.05);
+}
+
+.tabla-peliculas tfoot td {
+    font-weight: 600;
+    color: var(--color-accent);
+    border-top: 1px solid var(--color-accent);
+}
+
+/* --- Celular --- */
+
+@media (max-width: 700px) {
+    .graficos {
+        grid-template-columns: 1fr;
+    }
 }
