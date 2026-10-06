@@ -95,3 +95,47 @@ tfoot td {
     color: var(--color-accent);
     border-top: 1px solid var(--color-accent);
 }
+
+/* GRAFICOS */
+.filtros .boton-secundario {
+    background: transparent;
+    border: 1px solid var(--color-text-muted);
+    color: var(--color-text-muted);
+    font-weight: normal;
+}
+
+.filtros .boton-secundario:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+.graficos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 2rem;
+}
+
+.grafico-caja {
+    background-color: var(--color-surface);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+}
+
+/* El primer gráfico ocupa todo el ancho */
+.grafico-caja:first-child {
+    grid-column: 1 / -1;
+}
+
+.grafico-caja h3 {
+    font-family: var(--font-display, 'Playfair Display', serif);
+    color: var(--color-text);
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.grafico {
+    position: relative;
+    height: 260px;
+}

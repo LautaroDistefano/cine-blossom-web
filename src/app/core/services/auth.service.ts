@@ -1,12 +1,14 @@
 import { inject, Injectable, signal} from '@angular/core';
 import { Session, User } from '@supabase/supabase-js';
 import { SupabaseService } from './supabase.service';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn:'root',
 })
 export class AuthService {
     private supabase = inject(SupabaseService).client;
+    private router = inject(Router);
 
     // Estado reactivo de autenticación, consumido por guards y componentes
     currentUser = signal<User | null>(null);

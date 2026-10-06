@@ -13,6 +13,8 @@
         <button type="button" (click)="generar()" [disabled]="cargando()">
             {{ cargando() ? 'Cargando...' : 'Generar reporte' }}
         </button>
+        <button type="button" class="boton-secundario" (click)="ultimosDias(7)">Última semana</button>
+        <button type="button" class="boton-secundario" (click)="ultimosDias(30)">Último mes</button>
     </div>
 
     @if (error()) {
@@ -31,6 +33,21 @@
         <div class="dato-reporte">
             <span>Compras</span>
             <strong>{{ totalCompras() }}</strong>
+        </div>
+    </div>
+
+    <div class="graficos">
+        <div class="grafico-caja">
+            <h3>Entradas vendidas por día</h3>
+            <div class="grafico"><canvas #canvasDias></canvas></div>
+        </div>
+        <div class="grafico-caja">
+            <h3>Películas más vistas</h3>
+            <div class="grafico"><canvas #canvasPeliculas></canvas></div>
+        </div>
+        <div class="grafico-caja">
+            <h3>Producto de candy bar más vendido</h3>
+            <div class="grafico"><canvas #canvasProductos></canvas></div>
         </div>
     </div>
 
