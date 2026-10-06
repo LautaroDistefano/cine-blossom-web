@@ -2,9 +2,13 @@
 
 Plataforma web para la venta de entradas y la gestión de un cine: compra online con selección de butacas, candy bar, puntos, cupones, validación de entradas y reportes para el administrador.
 
+**Demo:** https://tu-proyecto.vercel.app
+**Repositorio:** https://github.com/LautaroDistefano/cine-blossom-web
+
 Proyecto de parcial de Programación. Autor: Lautaro Torres Distefano.
 
 ## Tecnologías
+...
 
 - Angular (standalone components y signals)
 - Supabase: base de datos, autenticación, Storage y Realtime
